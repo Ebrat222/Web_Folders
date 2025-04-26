@@ -16,6 +16,3 @@ Click the button below to copy the webpage link:
 
 ```html
 https://ebrat222.github.io/Web_Folders/Login_1/index.html
-
-```html
-https://ebrat222.github.io/Web_Folders/Login_2/index.html
