@@ -6,6 +6,8 @@ This is a simple HTML form hosted on GitHub Pages. You can view it live here:
 
 🔗 **Live Demo 2:** [https://ebrat222.github.io/Web_Folders/Login_2/index.html](https://ebrat222.github.io/Web_Folders/Login_2/index.html)  
 
+🔗 **Live Demo 3:** [https://ebrat222.github.io/Web_Folders/Shop_1/index.html](https://ebrat222.github.io/Web_Folders/Shop_1/index.html)  
+
 ## Features  
 ✅ Simple HTML CSS And JS Project's
 ✅ Easy to use  
