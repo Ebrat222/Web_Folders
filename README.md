@@ -8,7 +8,7 @@ This is a simple HTML form hosted on GitHub Pages. You can view it live here:
 
 🔗 **Live Demo 3:** [https://ebrat222.github.io/Web_Folders/Shop_1/index.html](https://ebrat222.github.io/Web_Folders/Shop_1/index.html)  
 
-🔗 **Live Demo 3:** [https://ebrat222.github.io/Web_Folders/Image%20Slider/index.html](https://ebrat222.github.io/Web_Folders/Image%20Slider/index.html)
+🔗 **Live Demo 4:** [https://ebrat222.github.io/Web_Folders/Image%20Slider/index.html](https://ebrat222.github.io/Web_Folders/Image%20Slider/index.html)
 
 ## Features  
 ✅ Simple HTML CSS And JS Project's
