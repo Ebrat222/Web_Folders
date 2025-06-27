@@ -10,6 +10,8 @@ This is a simple HTML form hosted on GitHub Pages. You can view it live here:
 
 🔗 **Live Demo 4:** [https://ebrat222.github.io/Web_Folders/Image%20Slider/index.html](https://ebrat222.github.io/Web_Folders/Image%20Slider/index.html)
 
+🔗 **Live Demo 4:** [https://ebrat222.github.io/Web_Folders/image_slider_v2/index.html](https://ebrat222.github.io/Web_Folders/image_slider_v2/index.html)
+
 ## Features  
 ✅ Simple HTML CSS And JS Project's
 ✅ Easy to use  
