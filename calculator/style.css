@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap'); /* Corrected import URL */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background-color: hsl(0, 0%, 95%);
+}
+
+#calculator {
+	background-color: hsl(0, 0%, 15%);
+	border-radius: 15px;
+	max-width: 500px;
+	overflow: hidden;
+}
+
+#display {
+	width: 100%;
+	padding: 20px;
+	font-size: 3rem;
+	text-align: left;
+	border: none;
+	background-color: hsl(0, 0%, 20%);
+	color: white;
+}
+
+#keys {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 10px;
+	padding: 25px;
+}
+
+.btn {
+	width: 100px;
+	height: 100px;
+	border-radius: 50px;
+	border: none;
+	background-color: hsl(0, 0%, 30%);
+	color: white;
+	font-size: 3rem;
+	font-weight: bold;
+	cursor: pointer;
+}
+a {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-decoration: none;
+}
+.btn:hover {
+	background-color: hsl(0, 0%, 40%);
+}
+
+.btn:active {
+	background-color: hsl(0, 0%, 50%);
+}
+
+.operator-btn {
+	background-color: hsl(35, 100%, 55%) !important;
+}
+
+.operator-btn:hover {
+	background-color: hsl(35, 100%, 65%) !important;
+}
+
+.operator-btn:active {
+	background-color: hsl(35, 100%, 75%) !important;
+}
+
+@media (max-width: 820px) {
+
+#calculator {
+	max-width: 400px;
+}
+
+#display {
+	width: 100%;
+	padding: 10px;
+	font-size: 2rem;
+	text-align: right;
+	font-weight: 200;
+}
+
+#keys {
+	gap: 10px;
+	padding: 10px;
+	grid-template-columns: repeat(4, auto);
+	justify-content: space-around;
+}
+
+.btn {
+	width: 50px;
+	height: 50px;
+	border-radius: 50px;
+	border: none;
+	background-color: hsl(0, 0%, 30%);
+	color: white;
+	font-size: 2rem;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+}
+
