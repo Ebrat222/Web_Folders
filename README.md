@@ -16,6 +16,9 @@ This is a simple HTML form hosted on GitHub Pages. You can view it live here:
 
 🔗 **Live Demo 7:** [https://ebrat222.github.io/Web_Folders/Login_v3/index.html](https://ebrat222.github.io/Web_Folders/Login_v3/index.html)
 
+🔗 **Live Demo 8:** [https://ebrat222.github.io/Web_Folders/calculator/index.html](https://ebrat222.github.io/Web_Folders/calculator/index.html)
+
+
 ## Features  
 ✅ Simple HTML CSS And JS Project's
 ✅ Easy to use  
