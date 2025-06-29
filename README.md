@@ -18,6 +18,8 @@ This is a simple HTML form hosted on GitHub Pages. You can view it live here:
 
 🔗 **Live Demo 8:** [https://ebrat222.github.io/Web_Folders/calculator/index.html](https://ebrat222.github.io/Web_Folders/calculator/index.html)
 
+🔗 **Live Demo 9:** [https://ebrat222.github.io/Web_Folders/simple-text-manager/index.html](https://ebrat222.github.io/Web_Folders/simple-text-manager/index.html)
+
 
 ## Features  
 ✅ Simple HTML CSS And JS Project's
