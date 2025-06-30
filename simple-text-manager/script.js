@@ -14,3 +14,10 @@ function actext() {
 	document.getElementById("text-show").value = '';
 	
 };
+
+document.getElementById('input-value').addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        addtext();
+    }
+});
