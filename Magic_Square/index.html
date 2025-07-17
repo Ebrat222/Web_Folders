@@ -1,0 +1,27 @@
+<html>
+<head>
+<style>
+	* {margin: 0; padding: 0; box-sizing: border-box;}
+	body {display: flex; flex-direction: column; justify-content: center; align-items: center;}
+	div {display: flex; justify-content: space-around; width: 90vw; margin-top: 30%; padding: 10px; border: 5px solid tomato; border-radius: 12px;}
+	input {font-size: 1.5em; font-weight: bold; width: 50vw;}
+	button {padding: 5px; font-weight: bold; border-radius: 5px; font-size: 1.5em; color: darkblue; background: gold;}
+	p {margin-top: 10%; font-size: 2.5em; font-weight: bold; color: blue;}
+</style>
+<body>
+<div>
+<input id="input" type="number"/>
+<button onclick="results()">Enter</button>
+</div>
+
+<p id="text"></p>
+
+<script>
+function results() {
+	let x = document.querySelector("#input").value;
+	let result = x*(x*x+1)/2;
+	let text = document.querySelector("#text").innerHTML = result;
+};
+</script>
+</body>
+</html>
