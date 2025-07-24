@@ -1,1 +1,114 @@
-yo
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f2f2f2;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  box-sizing: border-box;
+}
+
+textarea {
+  width: 100%;
+  min-height: 100px;
+  font-size: 1.1em;
+  padding: 10px;
+  resize: vertical;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 1em;
+  background: #00aaff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+#results > div {
+  background: #fafafa;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+  word-break: break-word;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    padding: 15px;
+  }
+
+  button {
+    font-size: 0.95em;
+  }
+}
+
+:root {
+  --bg-color: #f2f2f2;
+  --text-color: #222;
+  --box-color: #fff;
+  --shadow-color: rgba(0,0,0,0.15);
+  --button-bg: #00aaff;
+  --result-bg: #fafafa;
+}
+
+body.dark {
+  --bg-color: #121212;
+  --text-color: #eee;
+  --box-color: #1e1e1e;
+  --shadow-color: rgba(255,255,255,0.1);
+  --button-bg: #2196f3;
+  --result-bg: #2a2a2a;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s, color 0.3s;
+}
+
+.container {
+  background: var(--box-color);
+  box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+button {
+  background: var(--button-bg);
+}
+
+#results > div {
+  background: var(--result-bg);
+  box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  font-size: 1em;
+  cursor: pointer;
+}
