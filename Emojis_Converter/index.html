@@ -1,1 +1,21 @@
-yo
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Emoji Converter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+	<label class="switch">
+    <input type="checkbox" onchange="toggleDarkMode()">
+    <span class="slider"></span> Dark Mode
+    </label>
+    <h1>Emoji Converter &#128526</h1>
+    <textarea id="emojiInput" placeholder="Paste emoji or text here..."></textarea>
+    <button onclick="convertEmoji()">Convert</button>
+    <div id="results"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
