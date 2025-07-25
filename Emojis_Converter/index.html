@@ -4,9 +4,20 @@
   <meta charset="UTF-8">
   <title>Emoji Converter</title>
   <style>
-body {
+  :root {
+  --bg-color: #f2f2f2;
+  --text-color: #222;
+  --box-color: #fff;
+  --shadow-color: rgba(0,0,0,0.15);
+  --button-bg: #00aaff;
+  --result-bg: #fafafa;
+}
+
+  body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s, color 0.3s;
   font-family: 'Segoe UI', sans-serif;
-  background: #f2f2f2;
   margin: 0;
   padding: 20px;
   display: flex;
@@ -14,12 +25,12 @@ body {
 }
 
 .container {
+  background: var(--box-color);
+  box-shadow: 0 4px 20px var(--shadow-color);
   width: 100%;
   max-width: 600px;
-  background: #fff;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   box-sizing: border-box;
 }
 
@@ -36,11 +47,11 @@ textarea {
 }
 
 button {
+  background: var(--button-bg);
   display: block;
   width: 100%;
   padding: 12px;
   font-size: 1em;
-  background: #00aaff;
   color: white;
   border: none;
   border-radius: 6px;
@@ -49,36 +60,69 @@ button {
 }
 
 #results > div {
-  background: #fafafa;
+  background: var(--result-bg);
+  box-shadow: 0 2px 10px var(--shadow-color);
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   margin-bottom: 15px;
   word-break: break-word;
   box-sizing: border-box;
 }
 
-@media (max-width: 600px) {
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+@media (orientation: portrait) {
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+ }
   body {
-    padding: 10px;
+  min-height: 100vh;
+  width: 100vw;
   }
 
   .container {
-    padding: 15px;
+   max-width: 90vw;
+  }
+  
+  .switch {
+  font-size: 2em;
+  }
+  
+  h1 {
+  font-size: 5em;
+  font-weight: bold;
+  }
+  
+  textarea {
+  	min-height: 300px;
+  	font-size: 3em;
   }
 
   button {
-    font-size: 0.95em;
+    font-family: monospace;
+    font-size: 5em;
+    font-weight: bold;
+    border-radius: 25px;
+    margin: 10px 20px 20px 0;
   }
-}
-
-:root {
-  --bg-color: #f2f2f2;
-  --text-color: #222;
-  --box-color: #fff;
-  --shadow-color: rgba(0,0,0,0.15);
-  --button-bg: #00aaff;
-  --result-bg: #fafafa;
+  
+  #results > div > p {
+  	margin: 30px 0;
+  }
+  
+  #results > div > h3 {
+  font-size: 2.5em;
+  font-weight: bold;
+  }
 }
 
 body.dark {
@@ -90,35 +134,7 @@ body.dark {
   --result-bg: #2a2a2a;
 }
 
-body {
-  background: var(--bg-color);
-  color: var(--text-color);
-  transition: background 0.3s, color 0.3s;
-}
-
-.container {
-  background: var(--box-color);
-  box-shadow: 0 4px 20px var(--shadow-color);
-}
-
-button {
-  background: var(--button-bg);
-}
-
-#results > div {
-  background: var(--result-bg);
-  box-shadow: 0 2px 10px var(--shadow-color);
-}
-
-.switch {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
-  font-size: 1em;
-  cursor: pointer;
-}
-</style>
+ </style>
 </head>
 <body>
   <div class="container">
@@ -131,56 +147,6 @@ button {
     <button onclick="convertEmoji()">Convert</button>
     <div id="results"></div>
   </div>
-  <script>
-function convertEmoji() {
-  const input = document.getElementById("emojiInput").value;
-  const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML = "";
-
-  for (const char of input) {
-    const codePoint = char.codePointAt(0);
-
-    const hexCode = codePoint.toString(16).toUpperCase();
-    const decimalCode = codePoint.toString();
-    const binaryCode = codePoint.toString(2);
-
-    const htmlDecimal = `&#${decimalCode};`;
-    const htmlHex = `&#x${hexCode};`;
-    const unicode = `U+${hexCode}`;
-    const js = `\\u{${hexCode}}`;
-    const css = `\\${hexCode}`;
-    const urlEncoded = encodeURIComponent(char);
-
-    console.log(`\u{1F50D} Emoji: ${char}`);
-    console.log(`• Unicode: ${unicode}`);
-    console.log(`• HTML Decimal: ${htmlDecimal}`);
-    console.log(`• HTML Hex: ${htmlHex}`);
-    console.log(`• JavaScript: ${js}`);
-    console.log(`• CSS Content: ${css}`);
-    console.log(`• URL Encoding: ${urlEncoded}`);
-    console.log(`• Binary: ${binaryCode}`);
-    console.log("———————————————");
-
-    const block = `
-      <div>
-        <h3>${char}</h3>
-        <p><strong>Unicode:</strong> ${unicode}</p>
-        <p><strong>HTML Decimal:</strong> ${htmlDecimal}</p>
-        <p><strong>HTML Hex:</strong> ${htmlHex}</p>
-        <p><strong>JavaScript:</strong> ${js}</p>
-        <p><strong>CSS Content:</strong> content: "${css}";</p>
-        <p><strong>URL Encoding:</strong> ${urlEncoded}</p>
-        <p><strong>Binary:</strong> ${binaryCode}</p>
-      </div>
-      <hr>
-    `;
-    resultsDiv.innerHTML += block;
-  }
-}
-
-function toggleDarkMode() {
-  document.body.classList.toggle("dark");
-}
-</script>
+  <script src="script.js"></script>
 </body>
 </html>
