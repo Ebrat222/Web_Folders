@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Draggable Box</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #card {
+      width: 100px;
+      height: 100px;
+      border: 2px solid black;
+      cursor: grab;
+      position: absolute; /* enable absolute positioning */
+    }
+  </style>
+</head>
+<body>
+  <div id="card"></div>
+
+  <script>
+    const card = document.getElementById("card");
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    function startDrag(x, y) {
+      isDragging = true;
+      const rect = card.getBoundingClientRect();
+      offsetX = x - rect.left;
+      offsetY = y - rect.top;
+      card.style.cursor = "grabbing";
+    }
+
+    function drag(x, y) {
+      if (!isDragging) return;
+      card.style.left = (x - offsetX) + "px";
+      card.style.top = (y - offsetY) + "px";
+    }
+
+    function endDrag() {
+      isDragging = false;
+      card.style.cursor = "grab";
+    }
+
+    // Mouse Events
+    card.addEventListener("mousedown", (e) => startDrag(e.clientX, e.clientY));
+    document.addEventListener("mousemove", (e) => drag(e.clientX, e.clientY));
+    document.addEventListener("mouseup", endDrag);
+
+    // Touch Events
+    card.addEventListener("touchstart", (e) => {
+      const touch = e.touches[0];
+      startDrag(touch.clientX, touch.clientY);
+    });
+
+    document.addEventListener("touchmove", (e) => {
+      const touch = e.touches[0];
+      drag(touch.clientX, touch.clientY);
+    });
+
+    document.addEventListener("touchend", endDrag);
+  </script>
+</body>
+</html>
