@@ -22,6 +22,10 @@ This is a simple HTML form hosted on GitHub Pages. You can view it live here:
 
 🔗 **Live Demo 10:** [https://ebrat222.github.io/Web_Folders/Magic_Square/index.html](https://ebrat222.github.io/Web_Folders/Magic_Square/index.html)
 
+🔗 **Live Demo 11:** [https://ebrat222.github.io/Web_Folders/box-moving/index.html](https://ebrat222.github.io/Web_Folders/box-moving/index.html)
+
+🔗 **Live Demo 12:** [https://ebrat222.github.io/Web_Folders/Emojis_Converter/index.html](https://ebrat222.github.io/Web_Folders/Emojis_Converter/index.html)
+
 ## Features  
 ✅ Simple HTML CSS And JS Project's
 ✅ Easy to use  
