@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Binomial Cube Expander</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 20px; background: #f9f9f9; }
+    input, select, button { margin: 10px; padding: 6px; font-size: 16px; }
+    .result { margin-top: 20px; font-size: 18px; }
+    .proof { margin-top: 15px; text-align: left; display: none; background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 0 10px #ccc; }
+    .step { margin-bottom: 8px; }
+    .term { color: #0077cc; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Binomial Cube Expander</h2>
+  <label>Choose expression:</label>
+  <select id="type">
+    <option value="plus">(a + b)³</option>
+    <option value="minus">(a - b)³</option>
+  </select><br>
+
+  <label>Enter a:</label>
+  <input type="number" id="a" /><br>
+  <label>Enter b:</label>
+  <input type="number" id="b" /><br>
+
+  <button onclick="expand()">Expand</button>
+  <button onclick="toggleProof()">Show/Hide Proof</button>
+
+  <div class="result" id="result"></div>
+  <div class="proof" id="proofBox"></div>
+
+  <script>
+    function expand() {
+      const a = parseFloat(document.getElementById('a').value);
+      const b = parseFloat(document.getElementById('b').value);
+      const type = document.getElementById('type').value;
+
+      let expression = '';
+      let result = '';
+
+      if (type === 'plus') {
+        expression = `(a + b)³ = a³ + 3a²b + 3ab² + b³`;
+        result = `${Math.pow(a,3)} + 3×${Math.pow(a,2)}×${b} + 3×${a}×${Math.pow(b,2)} + ${Math.pow(b,3)} = ` +
+                 `${Math.pow(a,3) + 3*a*a*b + 3*a*b*b + Math.pow(b,3)}`;
+        showProofSteps(a, b, '+');
+      } else {
+        expression = `(a - b)³ = a³ - 3a²b + 3ab² - b³`;
+        result = `${Math.pow(a,3)} - 3×${Math.pow(a,2)}×${b} + 3×${a}×${Math.pow(b,2)} - ${Math.pow(b,3)} = ` +
+                 `${Math.pow(a,3) - 3*a*a*b + 3*a*b*b - Math.pow(b,3)}`;
+        document.getElementById('proofBox').innerHTML = `<div class="step">(a - b)³ expansion is direct: using identity</div>`;
+      }
+
+      document.getElementById('result').innerHTML = `
+        <div><span class="term">${expression}</span></div>
+        <div><strong>Evaluated:</strong> ${result}</div>
+      `;
+    }
+
+    function toggleProof() {
+      const proof = document.getElementById('proofBox');
+      proof.style.display = proof.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function showProofSteps(a, b, sign) {
+      const steps = [
+        `(a + b)³ = (a + b)(a + b)²`,
+        `= (a + b)(a² + 2ab + b²)`,
+        `= a(a² + 2ab + b²) + b(a² + 2ab + b²)`,
+        `= a³ + 2a²b + ab² + a²b + 2ab² + b³`,
+        `= a³ + 3a²b + 3ab² + b³`,
+        `= a³ + b³ + 3ab(a + b)`
+      ];
+
+      let html = '';
+      steps.forEach((step, i) => {
+        html += `<div class="step"><strong>Step ${i + 1}:</strong> ${step}</div>`;
+      });
+
+      document.getElementById('proofBox').innerHTML = html;
+    }
+  </script>
+</body>
+</html>
