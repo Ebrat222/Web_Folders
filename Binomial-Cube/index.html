@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Binomial Cube Expander</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 20px; }
+    input, select { margin: 10px; padding: 5px; font-size: 16px; }
+    .result { margin-top: 20px; font-size: 18px; color: #333; }
+    .term { color: #0077cc; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Binomial Cube Expander</h2>
+  <label>Choose expression:</label>
+  <select id="type">
+    <option value="plus">(a + b)³</option>
+    <option value="minus">(a - b)³</option>
+  </select><br>
+
+  <label>Enter a:</label>
+  <input type="number" id="a" /><br>
+  <label>Enter b:</label>
+  <input type="number" id="b" /><br>
+
+  <button onclick="expand()">Expand</button>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    function expand() {
+      const a = parseFloat(document.getElementById('a').value);
+      const b = parseFloat(document.getElementById('b').value);
+      const type = document.getElementById('type').value;
+
+      let expression = '';
+      let result = '';
+
+      if (type === 'plus') {
+        expression = `(a + b)³ = a³ + 3a²b + 3ab² + b³`;
+        result = `${Math.pow(a,3)} + 3×${Math.pow(a,2)}×${b} + 3×${a}×${Math.pow(b,2)} + ${Math.pow(b,3)} = ` +
+                 `${Math.pow(a,3) + 3*a*a*b + 3*a*b*b + Math.pow(b,3)}`;
+      } else {
+        expression = `(a - b)³ = a³ - 3a²b + 3ab² - b³`;
+        result = `${Math.pow(a,3)} - 3×${Math.pow(a,2)}×${b} + 3×${a}×${Math.pow(b,2)} - ${Math.pow(b,3)} = ` +
+                 `${Math.pow(a,3) - 3*a*a*b + 3*a*b*b - Math.pow(b,3)}`;
+      }
+
+      document.getElementById('result').innerHTML = `
+        <div><span class="term">${expression}</span></div>
+        <div><strong>Evaluated:</strong> ${result}</div>
+      `;
+    }
+  </script>
+</body>
+</html>
