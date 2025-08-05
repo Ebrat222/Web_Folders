@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Binomial Cube Expander</title>
+  <style>
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body {
+  font-size: 2em;
+  font-family: Arial, sans-serif;
+  width: 100vw;
+  height: 100vh;
+  padding: 5%;
+  background: linear-gradient(to bottom right, #f0f4ff, #f9f9f9);
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease;
+}
+body:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+h2 {
+  font-size: 2em;
+  text-align: center;
+  margin-bottom: 25px;
+  color: #005a9e;
+}
+
+.flex {
+	display: flex;
+	margin: 5% 0;
+}
+
+label {
+  display: inline-block;
+  margin: 3% 3% 3% 0%;
+  font-size: 2em;
+}
+
+.b {
+	margin-left: 5%;
+}
+
+input {
+  padding: 10px;
+  width: 20vw;
+  font-size: 1em;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  transition: border-color 0.1s ease;
+}
+input:focus {
+  border-color: #0078D4;
+  outline: none;
+}
+
+button {
+  font-family: Arial, sans-serif;
+  margin: 12px 0;
+  padding: 12px 22px;
+  font-size: 2em;
+  font-weight: 600;
+  letter-spacing: 3px;
+  background-color: #0078D4;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+button:hover {
+  background-color: #005a9e;
+}
+
+.output {
+  margin-top: 25px;
+  font-size: 17px;
+  background: #e0ecff;
+  padding: 18px;
+  border-radius: 12px;
+  border-left: 4px solid #0078D4;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+  </style>
+</head>
+<body>
+  <h2>🔢 Binomial Cube Expander</h2>
+  <div class="flex">
+  <label>a = <input type="number" id="a" value=""></label>
+  <label class="b">b = <input type="number" id="b" value=""></label>
+  </div>
+  <div class="flex">
+  <button onclick="expandCube()">Expand</button>
+  </div>
+  
+
+  <div class="output" id="output"></div>
+
+  <script>
+    function expandCube() {
+      const a = parseInt(document.getElementById("a").value);
+      const b = parseInt(document.getElementById("b").value);
+
+      const a3 = a ** 3;
+      const a2b = 3 * (a ** 2) * b;
+      const ab2 = 3 * a * (b ** 2);
+      const b3 = b ** 3;
+      const result = a3 + a2b + ab2 + b3;
+
+      const steps = [
+        `(a + b)^3 = a^3 + 3a^2b + 3ab^2 + b^3`,
+        `a^3 = ${a}^3 = ${a3}`,
+        `3a^2b = 3 × ${a}^2 × ${b} = ${a2b}`,
+        `3ab^2 = 3 × ${a} × ${b}^2 = ${ab2}`,
+        `b^3 = ${b}^3 = ${b3}`,
+        `Result = ${a3} + ${a2b} + ${ab2} + ${b3} = ${result}`
+      ].join("\n");
+
+      document.getElementById("output").textContent = steps;
+    }
+  </script>
+</body>
+</html>
