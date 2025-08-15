@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gogeta Flip Card</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Mozilla+Headline:wght@200..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
     * {
       margin: 0;
       padding: 0;
@@ -30,7 +31,6 @@
       cursor: pointer;
     }
 
-    /* Inner container for rotation */
     .card-inner {
       position: relative;
       width: 100%;
@@ -42,7 +42,6 @@
                   -5px -5px 10px rgba(0, 0, 0, 0.05);
     }
 
-    /* Flipped state */
     .card-inner.is-flipped {
       transform: rotateY(180deg);
     }
@@ -83,6 +82,7 @@
       font-size: 1.2rem;
       margin-top: 5px;
       color: #0fbcf9;
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
     }
 
     .back-page {
