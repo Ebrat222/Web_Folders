@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Color Generator V1</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      margin-top: 30px;
+    }
+
+    .color-box {
+      width: 300px;
+      height: 300px;
+      margin: 20px auto;
+      border: 2px solid #333;
+      transition: background 0.3s ease;
+    }
+
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .sliders {
+      margin-top: 20px;
+    }
+
+    .sliders input {
+      width: 200px;
+      margin: 5px;
+    }
+
+    .mode-buttons {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Advanced Color Generator</h1>
+    <div class="color-box" id="colorBox"></div>
+    <p id="colorCode">#FFFFFF</p>
+
+    <div class="mode-buttons">
+      <button onclick="setMode('rgb')">RGB</button>
+      <button onclick="setMode('rgba')">RGBA</button>
+      <button onclick="setMode('hsl')">HSL</button>
+      <button onclick="setMode('gradient')">Gradient</button>
+    </div>
+
+    <div class="sliders" id="sliders">
+      <label>Red: <input type="range" min="0" max="255" id="r" /></label><br />
+      <label>Green: <input type="range" min="0" max="255" id="g" /></label><br />
+      <label>Blue: <input type="range" min="0" max="255" id="b" /></label><br />
+      <label>Alpha: <input type="range" min="0" max="1" step="0.01" id="a" /></label><br />
+      <label>Hue: <input type="range" min="0" max="360" id="h" /></label><br />
+      <label>Saturation: <input type="range" min="0" max="100" id="s" /></label><br />
+      <label>Lightness: <input type="range" min="0" max="100" id="l" /></label><br />
+    </div>
+
+    <button onclick="generateColor()">Generate</button>
+    <button onclick="copyColor()">Copy</button>
+  </div>
+
+  <script>
+    let mode = 'rgb';
+
+    function setMode(newMode) {
+      mode = newMode;
+      document.getElementById("colorCode").textContent = "Mode: " + mode.toUpperCase();
+    }
+
+    function generateColor() {
+      let color;
+      const r = document.getElementById("r").value || 0;
+      const g = document.getElementById("g").value || 0;
+      const b = document.getElementById("b").value || 0;
+      const a = document.getElementById("a").value || 1;
+      const h = document.getElementById("h").value || 0;
+      const s = document.getElementById("s").value || 100;
+      const l = document.getElementById("l").value || 50;
+
+      if (mode === 'rgb') {
+        color = `rgb(${r}, ${g}, ${b})`;
+      } else if (mode === 'rgba') {
+        color = `rgba(${r}, ${g}, ${b}, ${a})`;
+      } else if (mode === 'hsl') {
+        color = `hsl(${h}, ${s}%, ${l}%)`;
+      } else if (mode === 'gradient') {
+        const color1 = `rgb(${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)})`;
+        const color2 = `rgb(${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)})`;
+        color = `linear-gradient(to right, ${color1}, ${color2})`;
+        document.getElementById("colorBox").style.background = color;
+        document.getElementById("colorCode").textContent = color;
+        return;
+      }
+
+      document.getElementById("colorBox").style.background = color;
+      document.getElementById("colorCode").textContent = color;
+    }
+
+    function copyColor() {
+      const color = document.getElementById("colorCode").textContent;
+      navigator.clipboard.writeText(color);
+      alert("Copied: " + color);
+    }
+  </script>Generator                                                                           </html>
