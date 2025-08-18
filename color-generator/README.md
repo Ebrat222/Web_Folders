@@ -27,3 +27,9 @@ Gradient Color Generator V2
 https://ebrat222.github.io/Web_Folders/color-generator/gradient_v2.html
 
 .
+
+Gradient Color Generator V3
+
+https://ebrat222.github.io/Web_Folders/color-generator/gradient_v3.html
+
+.
