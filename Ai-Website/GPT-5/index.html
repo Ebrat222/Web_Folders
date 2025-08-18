@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[YOUR BRAND] – Result‑Driven Web & App Solutions</title>
+  <meta name="description" content="[YOUR BRAND] builds fast, beautiful websites and apps that convert. Strategy → Design → Build → Launch." />
+  <meta property="og:title" content="[YOUR BRAND] – Result‑Driven Web & App Solutions" />
+  <meta property="og:description" content="Strategy → Design → Build → Launch. Book a call today." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1529101091764-c3526daf38fe?q=80&w=1200&auto=format&fit=crop" />
+  <meta property="og:type" content="website" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind theme extension
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#0B5FFF',
+              dark: '#0A4ED1'
+            },
+            slateink: '#1F2937',
+          },
+          boxShadow: {
+            soft: '0 10px 30px -10px rgba(2, 6, 23, 0.15)'
+          },
+          borderRadius: {
+            '2xl': '1.25rem'
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+    /* Hide scrollbar for carousels */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    /* Simple fade-up animation */
+    .reveal { opacity: 0; transform: translateY(12px); transition: all .6s ease; }
+    .reveal.on { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body class="bg-white text-slate-800">
+  <!-- Sticky Navbar -->
+  <header id="header" class="fixed top-0 inset-x-0 z-50 transition-all bg-white/80 backdrop-blur border-b border-slate-200">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <a href="#" class="flex items-center gap-2">
+          <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-white font-extrabold">YB</span>
+          <span class="font-extrabold tracking-tight text-slate-900">[YOUR BRAND]</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
+          <a href="#services" class="hover:text-brand">Services</a>
+          <a href="#portfolio" class="hover:text-brand">Portfolio</a>
+          <a href="#pricing" class="hover:text-brand">Pricing</a>
+          <a href="#testimonials" class="hover:text-brand">Testimonials</a>
+          <a href="#faq" class="hover:text-brand">FAQ</a>
+          <a href="#blog" class="hover:text-brand">Blog</a>
+          <a href="#contact" class="px-4 py-2 rounded-full bg-brand text-white hover:bg-brand-dark shadow-soft">Get a Quote</a>
+        </nav>
+        <button id="menuBtn" class="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="md:hidden hidden border-t border-slate-200 bg-white">
+      <div class="px-4 py-3 grid gap-2 text-sm">
+        <a class="py-2" href="#services">Services</a>
+        <a class="py-2" href="#portfolio">Portfolio</a>
+        <a class="py-2" href="#pricing">Pricing</a>
+        <a class="py-2" href="#testimonials">Testimonials</a>
+        <a class="py-2" href="#faq">FAQ</a>
+        <a class="py-2" href="#blog">Blog</a>
+        <a class="py-2 rounded-xl text-center bg-brand text-white" href="#contact">Get a Quote</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative pt-28 pb-16 md:pt-32 md:pb-24">
+    <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop" alt="Hero" class="absolute inset-0 -z-10 h-full w-full object-cover"/>
+    <div class="absolute inset-0 -z-10 bg-slate-900/70"></div>
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-10 items-center text-white">
+        <div class="reveal on">
+          <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">We design & build products that <span class="text-brand">grow</span> your business.</h1>
+          <p class="mt-4 text-lg/relaxed text-slate-200">From strategy to launch, we deliver fast, beautiful and accessible web & mobile experiences that convert.</p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#contact" class="px-6 py-3 rounded-full bg-brand hover:bg-brand-dark text-white font-semibold shadow-soft">Start a Project</a>
+            <a href="#portfolio" class="px-6 py-3 rounded-full border border-white/30 hover:bg-white/10">See Our Work</a>
+          </div>
+          <div class="mt-8 flex items-center gap-6 text-sm text-slate-200/90">
+            <div class="flex items-center gap-2"><span>⭐</span><span>4.9/5 average rating</span></div>
+            <div class="flex items-center gap-2"><span>👥</span><span>1,200+ clients</span></div>
+          </div>
+        </div>
+        <div class="reveal md:justify-self-end">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="rounded-2xl bg-white/10 border border-white/20 p-4">
+              <div class="text-3xl font-extrabold">+38%</div>
+              <div class="text-sm text-slate-200">Avg. conversion lift</div>
+            </div>
+            <div class="rounded-2xl bg-white/10 border border-white/20 p-4">
+              <div class="text-3xl font-extrabold"><span class="align-top">↓</span>1.2s</div>
+              <div class="text-sm text-slate-200">Core Web Vitals</div>
+            </div>
+            <div class="rounded-2xl bg-white/10 border border-white/20 p-4">
+              <div class="text-3xl font-extrabold">24/7</div>
+              <div class="text-sm text-slate-200">Managed support</div>
+            </div>
+            <div class="rounded-2xl bg-white/10 border border-white/20 p-4">
+              <div class="text-3xl font-extrabold">ISO</div>
+              <div class="text-sm text-slate-200">Best practices</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="py-12 bg-slate-50">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-4 gap-4">
+        <!-- Card template repeated -->
+        <a href="#contact" class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-soft hover:-translate-y-0.5 transition">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-xl bg-brand/10 text-brand grid place-items-center">📞</div>
+            <div>
+              <div class="font-semibold">Book a Call</div>
+              <div class="text-sm text-slate-500">Free 15‑min discovery</div>
+            </div>
+          </div>
+        </a>
+        <a href="#contact" class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-soft hover:-translate-y-0.5 transition">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-xl bg-brand/10 text-brand grid place-items-center">💬</div>
+            <div>
+              <div class="font-semibold">WhatsApp Us</div>
+              <div class="text-sm text-slate-500">Fastest response</div>
+            </div>
+          </div>
+        </a>
+        <a href="#pricing" class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-soft hover:-translate-y-0.5 transition">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-xl bg-brand/10 text-brand grid place-items-center">💳</div>
+            <div>
+              <div class="font-semibold">Get a Quote</div>
+              <div class="text-sm text-slate-500">Transparent pricing</div>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-soft hover:-translate-y-0.5 transition">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-xl bg-brand/10 text-brand grid place-items-center">⬇️</div>
+            <div>
+              <div class="font-semibold">Download Brochure</div>
+              <div class="text-sm text-slate-500">PDF capabilities</div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl reveal">
+        <h2 class="text-3xl md:text-4xl font-extrabold">Services</h2>
+        <p class="mt-3 text-slate-600">End‑to‑end delivery across strategy, design and engineering. Pick a service or create a custom package.</p>
+      </div>
+      <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Service card -->
+        <div class="reveal rounded-2xl border border-slate-200 p-6 hover:shadow-soft">
+          <img class="h-40 w-full object-cover rounded-xl" src="https://picsum.photos/seed/web/640/320" alt="Web Design"/>
+          <h3 class="mt-4 text-xl font-bold">Web Design</h3>
+          <ul class="mt-2 space-y-2 text-sm text-slate-600">
+            <li>✓ Conversion‑focused UI</li>
+            <li>✓ Responsive & accessible</li>
+            <li>✓ CMS or headless</li>
+          </ul>
+          <a href="#contact" class="mt-4 inline-block text-brand font-semibold">Learn more →</a>
+        </div>
+
+        <div class="reveal rounded-2xl border border-slate-200 p-6 hover:shadow-soft">
+          <img class="h-40 w-full object-cover rounded-xl" src="https://picsum.photos/seed/app/640/320" alt="App Development"/>
+          <h3 class="mt-4 text-xl font-bold">App Development</h3>
+          <ul class="mt-2 space-y-2 text-sm text-slate-600">
+            <li>✓ iOS, Android, PWA</li>
+            <li>✓ Scalable backends</li>
+            <li>✓ CI/CD & testing</li>
+          </ul>
+          <a href="#contact" class="mt-4 inline-block text-brand font-semibold">Learn more →</a>
+        </div>
+
+        <div class="reveal rounded-2xl border border-slate-200 p-6 hover:shadow-soft">
+          <img class="h-40 w-full object-cover rounded-xl" src="https://picsum.photos/seed/seo/640/320" alt="SEO"/>
+          <h3 class="mt-4 text-xl font-bold">SEO & Performance</h3>
+          <ul class="mt-2 space-y-2 text-sm text-slate-600">
+            <li>✓ Technical + content</li>
+            <li>✓ Core Web Vitals</li>
+            <li>✓ Analytics & CRO</li>
+          </ul>
+          <a href="#contact" class="mt-4 inline-block text-brand font-semibold">Learn more →</a>
+        </div>
+
+        <div class="reveal rounded-2xl border border-slate-200 p-6 hover:shadow-soft">
+          <img class="h-40 w-full object-cover rounded-xl" src="https://picsum.photos/seed/brand/640/320" alt="Branding"/>
+          <h3 class="mt-4 text-xl font-bold">Branding</h3>
+          <ul class="mt-2 space-y-2 text-sm text-slate-600">
+            <li>✓ Identity systems</li>
+            <li>✓ Design language</li>
+            <li>✓ Marketing assets</li>
+          </ul>
+          <a href="#contact" class="mt-4 inline-block text-brand font-semibold">Learn more →</a>
+        </div>
+
+        <div class="reveal rounded-2xl border border-slate-200 p-6 hover:shadow-soft">
+          <img class="h-40 w-full object-cover rounded-xl" src="https://picsum.photos/seed/smm/640/320" alt="Social"/>
+          <h3 class="mt-4 text-xl font-bold">Social Media</h3>
+          <ul class="mt-2 space-y-2 text-sm text-slate-600">
+            <li>✓ Content & ads</li>
+            <li>✓ Community growth</li>
+            <li>✓ Reporting</li>
+          </ul>
+          <a href="#contact" class="mt-4 inline-block text-brand font-semibold">Learn more →</a>
+        </div>
+
+        <div class="reveal rounded-2xl border border-slate-200 p-6 hover:shadow-soft">
+          <img class="h-40 w-full object-cover rounded-xl" src="https://picsum.photos/seed/support/640/320" alt="Maintenance"/>
+          <h3 class="mt-4 text-xl font-bold">Maintenance</h3>
+          <ul class="mt-2 space-y-2 text-sm text-slate-600">
+            <li>✓ 24/7 monitoring</li>
+            <li>✓ Updates & backups</li>
+            <li>✓ SLA support</li>
+          </ul>
+          <a href="#contact" class="mt-4 inline-block text-brand font-semibold">Learn more →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="py-20 bg-slate-50">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl reveal">
+        <h2 class="text-3xl md:text-4xl font-extrabold">How it works</h2>
+        <p class="mt-3 text-slate-600">A simple, transparent process built for speed and quality.</p>
+      </div>
+      <div class="mt-10 grid md:grid-cols-4 gap-6">
+        <div class="reveal rounded-2xl border border-slate-200 bg-white p-6">
+          <div class="text-2xl">🔎</div>
+          <h3 class="mt-2 font-bold">1. Discovery</h3>
+          <p class="text-sm text-slate-600">Goals, audience, scope and success metrics.</p>
+        </div>
+        <div class="reveal rounded-2xl border border-slate-200 bg-white p-6">
+          <div class="text-2xl">🧭</div>
+          <h3 class="mt-2 font-bold">2. Proposal</h3>
+          <p class="text-sm text-slate-600">Roadmap, timelines, fixed pricing, milestones.</p>
+        </div>
+        <div class="reveal rounded-2xl border border-slate-200 bg-white p-6">
+          <div class="text-2xl">🛠️</div>
+          <h3 class="mt-2 font-bold">3. Build</h3>
+          <p class="text-sm text-slate-600">Design, content, development, QA and testing.</p>
+        </div>
+        <div class="reveal rounded-2xl border border-slate-200 bg-white p-6">
+          <div class="text-2xl">🚀</div>
+          <h3 class="mt-2 font-bold">4. Launch</h3>
+          <p class="text-sm text-slate-600">Deploy, analytics, training and ongoing support.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio -->
+  <section id="portfolio" class="py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl reveal">
+        <h2 class="text-3xl md:text-4xl font-extrabold">Selected work</h2>
+        <p class="mt-3 text-slate-600">A snapshot of recent projects. Click to enlarge.</p>
+      </div>
+      <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- 9 portfolio images -->
+        <template id="portfolioItemTemplate">
+          <a class="block group rounded-2xl overflow-hidden border border-slate-200">
+            <img class="w-full h-56 object-cover group-hover:scale-105 transition" alt="Portfolio item"/>
+          </a>
+        </template>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metrics -->
+  <section class="py-16 bg-slate-900 text-white">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid md:grid-cols-4 gap-8 text-center">
+      <div class="reveal">
+        <div class="text-4xl font-extrabold counter" data-target="240">0</div>
+        <div class="mt-2 text-slate-300">Projects Delivered</div>
+      </div>
+      <div class="reveal">
+        <div class="text-4xl font-extrabold counter" data-target="98">0</div>
+        <div class="mt-2 text-slate-300">% Client Satisfaction</div>
+      </div>
+      <div class="reveal">
+        <div class="text-4xl font-extrabold counter" data-target="22">0</div>
+        <div class="mt-2 text-slate-300">Countries Served</div>
+      </div>
+      <div class="reveal">
+        <div class="text-4xl font-extrabold counter" data-target="12">0</div>
+        <div class="mt-2 text-slate-300">Industry Awards</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials" class="py-20 bg-slate-50">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl reveal">
+        <h2 class="text-3xl md:text-4xl font-extrabold">Happy clients</h2>
+        <p class="mt-3 text-slate-600">What partners say about working with us.</p>
+      </div>
+      <div id="testimonialTrack" class="mt-10 overflow-x-auto no-scrollbar">
+        <div class="flex gap-6 min-w-max">
+          <!-- Cards appended by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl reveal">
+        <h2 class="text-3xl md:text-4xl font-extrabold">Simple pricing</h2>
+        <p class="mt-3 text-slate-600">Transparent packages. Custom plans available on request.</p>
+      </div>
+      <div class="mt-10 grid md:grid-cols-3 gap-6">
+        <!-- Plan 1 -->
+        <div class="reveal rounded-2xl border border-slate-200 p-6">
+          <h3 class="text-xl font-bold">Starter</h3>
+          <div class="mt-3 text-4xl font-extrabold">$999</div>
+          <ul class="mt-4 space-y-2 text-sm text-slate-600">
+            <li>✓ 5 pages website</li>
+            <li>✓ Responsive design</li>
+            <li>✓ Basic SEO</li>
+            <li>✓ 2 revisions</li>
+          </ul>
+          <a href="#contact" class="mt-6 inline-block w-full text-center rounded-full bg-slate-900 text-white py-3">Choose Plan</a>
+        </div>
+        <!-- Plan 2 (featured) -->
+        <div class="reveal rounded-2xl border-2 border-brand p-6 shadow-soft relative">
+          <span class="absolute -top-3 right-6 rounded-full bg-brand text-white text-xs font-bold px-2 py-1">Popular</span>
+          <h3 class="text-xl font-bold">Growth</h3>
+          <div class="mt-3 text-4xl font-extrabold">$2,499</div>
+          <ul class="mt-4 space-y-2 text-sm text-slate-600">
+            <li>✓ 12 pages website</li>
+            <li>✓ CMS + blog</li>
+            <li>✓ Performance + SEO</li>
+            <li>✓ 6 revisions</li>
+          </ul>
+          <a href="#contact" class="mt-6 inline-block w-full text-center rounded-full bg-brand text-white py-3">Choose Plan</a>
+        </div>
+        <!-- Plan 3 -->
+        <div class="reveal rounded-2xl border border-slate-200 p-6">
+          <h3 class="text-xl font-bold">Scale</h3>
+          <div class="mt-3 text-4xl font-extrabold">$4,999+</div>
+          <ul class="mt-4 space-y-2 text-sm text-slate-600">
+            <li>✓ Web + mobile app</li>
+            <li>✓ API & integrations</li>
+            <li>✓ Analytics, CRO, A/B</li>
+            <li>✓ Dedicated PM</li>
+          </ul>
+          <a href="#contact" class="mt-6 inline-block w-full text-center rounded-full bg-slate-900 text-white py-3">Choose Plan</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="py-20 bg-slate-50">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl md:text-4xl font-extrabold">FAQs</h2>
+      <div class="mt-8 divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
+        <!-- FAQ items -->
+        <details class="group p-6" open>
+          <summary class="flex cursor-pointer list-none items-center justify-between text-lg font-semibold">How long does a project take?
+            <span class="ml-4 transition group-open:rotate-180">⌄</span>
+          </summary>
+          <p class="mt-3 text-slate-600">Most websites take 3–6 weeks depending on scope and content readiness. Apps vary by complexity.</p>
+        </details>
+        <details class="group p-6">
+          <summary class="flex cursor-pointer list-none items-center justify-between text-lg font-semibold">Do you provide content?
+            <span class="ml-4 transition group-open:rotate-180">⌄</span>
+          </summary>
+          <p class="mt-3 text-slate-600">Yes, we can help with copywriting, photography, and illustrations as add‑ons.</p>
+        </details>
+        <details class="group p-6">
+          <summary class="flex cursor-pointer list-none items-center justify-between text-lg font-semibold">What tech stack do you use?
+            <span class="ml-4 transition group-open:rotate-180">⌄</span>
+          </summary>
+          <p class="mt-3 text-slate-600">Modern stacks like React/Next, Tailwind, Node, and headless CMS. We also support WordPress if required.</p>
+        </details>
+        <details class="group p-6">
+          <summary class="flex cursor-pointer list-none items-center justify-between text-lg font-semibold">Do you offer support after launch?
+            <span class="ml-4 transition group-open:rotate-180">⌄</span>
+          </summary>
+          <p class="mt-3 text-slate-600">Absolutely. Pick a maintenance plan for updates, monitoring, backups and priority support.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog -->
+  <section id="blog" class="py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl reveal">
+        <h2 class="text-3xl md:text-4xl font-extrabold">From the blog</h2>
+        <p class="mt-3 text-slate-600">Insights on design, development and growth.</p>
+      </div>
+      <div class="mt-10 grid md:grid-cols-3 gap-6">
+        <article class="reveal rounded-2xl border border-slate-200 overflow-hidden">
+          <img src="https://picsum.photos/seed/blog1/640/360" class="w-full h-48 object-cover" alt="Blog 1"/>
+          <div class="p-6">
+            <span class="text-xs uppercase tracking-wide text-slate-500">Performance</span>
+            <h3 class="mt-2 font-bold text-lg">Core Web Vitals in 2025</h3>
+            <p class="mt-2 text-sm text-slate-600">What to watch and how to improve real‑world user experience.</p>
+            <a href="#" class="mt-3 inline-block text-brand font-semibold">Read more →</a>
+          </div>
+        </article>
+        <article class="reveal rounded-2xl border border-slate-200 overflow-hidden">
+          <img src="https://picsum.photos/seed/blog2/640/360" class="w-full h-48 object-cover" alt="Blog 2"/>
+          <div class="p-6">
+            <span class="text-xs uppercase tracking-wide text-slate-500">Design</span>
+            <h3 class="mt-2 font-bold text-lg">10 UX wins for higher conversions</h3>
+            <p class="mt-2 text-sm text-slate-600">Quick improvements that deliver outsized results.</p>
+            <a href="#" class="mt-3 inline-block text-brand font-semibold">Read more →</a>
+          </div>
+        </article>
+        <article class="reveal rounded-2xl border border-slate-200 overflow-hidden">
+          <img src="https://picsum.photos/seed/blog3/640/360" class="w-full h-48 object-cover" alt="Blog 3"/>
+          <div class="p-6">
+            <span class="text-xs uppercase tracking-wide text-slate-500">Strategy</span>
+            <h3 class="mt-2 font-bold text-lg">Scoping projects like a pro</h3>
+            <p class="mt-2 text-sm text-slate-600">Avoid surprises with clear goals, milestones and deliverables.</p>
+            <a href="#" class="mt-3 inline-block text-brand font-semibold">Read more →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="py-20 bg-slate-50">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-10">
+        <div class="reveal">
+          <h2 class="text-3xl md:text-4xl font-extrabold">Start your project</h2>
+          <p class="mt-3 text-slate-600">Tell us about your goals. We’ll reply within 24 hours.</p>
+          <div class="mt-6 space-y-3 text-sm text-slate-700">
+            <div>📍 123 Market Street, Anywhere</div>
+            <div>✉️ hello@yourbrand.com</div>
+            <div>📞 +1 (555) 123‑4567</div>
+          </div>
+          <img src="https://picsum.photos/seed/map/800/400" class="mt-6 rounded-2xl border border-slate-200" alt="Map placeholder"/>
+        </div>
+        <form class="reveal rounded-2xl border border-slate-200 bg-white p-6 grid grid-cols-1 gap-4" onsubmit="event.preventDefault(); alert('Thanks! We\'ll be in touch shortly.'); this.reset();">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm font-medium">Name</label>
+              <input required type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:border-brand focus:ring-brand" placeholder="Jane Doe" />
+            </div>
+            <div>
+              <label class="text-sm font-medium">Email</label>
+              <input required type="email" class="mt-1 w-full rounded-xl border-slate-300 focus:border-brand focus:ring-brand" placeholder="jane@company.com" />
+            </div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm font-medium">Phone</label>
+              <input type="tel" class="mt-1 w-full rounded-xl border-slate-300 focus:border-brand focus:ring-brand" placeholder="+1 555 000 0000" />
+            </div>
+            <div>
+              <label class="text-sm font-medium">Service</label>
+              <select class="mt-1 w-full rounded-xl border-slate-300 focus:border-brand focus:ring-brand">
+                <option>Web Design</option>
+                <option>App Development</option>
+                <option>SEO & Performance</option>
+                <option>Branding</option>
+                <option>Social Media</option>
+                <option>Maintenance</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm font-medium">Budget</label>
+              <select class="mt-1 w-full rounded-xl border-slate-300 focus:border-brand focus:ring-brand">
+                <option>$1k–$3k</option>
+                <option>$3k–$10k</option>
+                <option>$10k–$25k</option>
+                <option>$25k+</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-sm font-medium">Upload brief (optional)</label>
+              <input type="file" class="mt-1 w-full rounded-xl border-slate-300 focus:border-brand focus:ring-brand" />
+            </div>
+          </div>
+          <div>
+            <label class="text-sm font-medium">Message</label>
+            <textarea rows="5" class="mt-1 w-full rounded-xl border-slate-300 focus:border-brand focus:ring-brand" placeholder="Tell us about your goals..."></textarea>
+          </div>
+          <label class="inline-flex items-center gap-2 text-sm">
+            <input type="checkbox" required class="rounded border-slate-300 text-brand focus:ring-brand" />
+            I agree to the privacy policy.
+          </label>
+          <button class="mt-2 rounded-full bg-brand hover:bg-brand-dark text-white px-6 py-3 font-semibold">Send message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 grid md:grid-cols-4 gap-8">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-white font-extrabold">YB</span>
+          <span class="font-extrabold">[YOUR BRAND]</span>
+        </div>
+        <p class="mt-3 text-sm text-slate-600">We craft high‑performance products that drive measurable growth.</p>
+      </div>
+      <div>
+        <h4 class="font-semibold">Services</h4>
+        <ul class="mt-3 space-y-2 text-sm text-slate-600">
+          <li><a href="#services">Web Design</a></li>
+          <li><a href="#services">App Development</a></li>
+          <li><a href="#services">SEO</a></li>
+          <li><a href="#services">Branding</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold">Resources</h4>
+        <ul class="mt-3 space-y-2 text-sm text-slate-600">
+          <li><a href="#blog">Blog</a></li>
+          <li><a href="#faq">FAQs</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#">Privacy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold">Newsletter</h4>
+        <p class="mt-3 text-sm text-slate-600">Get monthly tips & insights.</p>
+        <form class="mt-3 flex gap-2" onsubmit="event.preventDefault(); alert('Thanks for subscribing!')">
+          <input type="email" required placeholder="you@email.com" class="flex-1 rounded-xl border-slate-300 focus:border-brand focus:ring-brand px-3"/>
+          <button class="rounded-xl px-4 bg-slate-900 text-white">Join</button>
+        </form>
+        <div class="mt-4 flex gap-3 text-slate-500 text-xl">
+          <a href="#" aria-label="Twitter">🐦</a>
+          <a href="#" aria-label="LinkedIn">💼</a>
+          <a href="#" aria-label="Instagram">📷</a>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-slate-200 py-6 text-center text-sm text-slate-500">© <span id="year"></span> [YOUR BRAND]. All rights reserved.</div>
+  </footer>
+
+  <!-- Floating WhatsApp / Chat Button -->
+  <a href="https://wa.me/15551234567" class="fixed bottom-6 right-6 h-14 w-14 grid place-items-center rounded-full bg-green-500 text-white shadow-soft" aria-label="WhatsApp chat">💬</a>
+
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/80 p-4">
+    <button id="lightboxClose" class="absolute top-6 right-6 text-white text-2xl" aria-label="Close">✕</button>
+    <img id="lightboxImg" class="max-h-[85vh] rounded-2xl shadow-2xl" alt="Preview"/>
+  </div>
+
+  <script>
+    // Mobile menu toggle
+    document.getElementById('menuBtn').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    });
+
+    // Header shrink shadow on scroll
+    const header = document.getElementById('header');
+    const onScroll = () => {
+      if (window.scrollY > 6) header.classList.add('shadow');
+      else header.classList.remove('shadow');
+
+      // reveal on scroll
+      document.querySelectorAll('.reveal').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 80) el.classList.add('on');
+      });
+    }
+    window.addEventListener('scroll', onScroll); onScroll();
+
+    // Current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Portfolio grid population + lightbox
+    const portfolioSeeds = ['p1','p2','p3','p4','p5','p6','p7','p8','p9'];
+    const grid = document.querySelector('#portfolio .grid');
+    const tpl = document.getElementById('portfolioItemTemplate');
+    portfolioSeeds.forEach(seed => {
+      const node = tpl.content.cloneNode(true);
+      const a = node.querySelector('a');
+      const img = node.querySelector('img');
+      const src = `https://picsum.photos/seed/${seed}/800/600`;
+      img.src = src; img.alt = `Project ${seed}`;
+      a.href = src; a.addEventListener('click', (e) => { e.preventDefault(); openLightbox(src); });
+      grid.appendChild(node);
+    });
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+    function openLightbox(src){ lightboxImg.src = src; lightbox.classList.remove('hidden'); lightbox.classList.add('flex'); }
+    function closeLightbox(){ lightbox.classList.add('hidden'); lightbox.classList.remove('flex'); }
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e)=>{ if(e.target===lightbox) closeLightbox(); });
+
+    // Counters
+    const counters = document.querySelectorAll('.counter');
+    const animateCounters = () => {
+      counters.forEach(el => {
+        const target = +el.dataset.target;
+        const val = +el.textContent.replace(/\D/g,'');
+        const inc = Math.max(1, Math.floor(target/60));
+        if (val < target) el.textContent = val + inc; else el.textContent = target;
+      });
+    }
+    let counterInterval = setInterval(animateCounters, 30);
+    setTimeout(()=> clearInterval(counterInterval), 3000);
+
+    // Testimonials carousel (auto scroll)
+    const testimonials = [
+      {name:'Aisha Khan', role:'CMO, Brightly', text:'They moved fast and nailed the UX. Our conversions jumped within two weeks.'},
+      {name:'Liam Garcia', role:'Founder, Craftly', text:'Professional, proactive and a joy to collaborate with. 10/10 would hire again.'},
+      {name:'Emily Chen', role:'Head of Growth, Nova', text:'Pixel‑perfect implementation and excellent communication throughout.'},
+      {name:'Noah Patel', role:'CEO, Orbit', text:'Clear scope, fixed pricing, no surprises. Launch was smooth and on time.'},
+      {name:'Sofia Rossi', role:'Product Lead, Quanta', text:'Accessibility and performance were top‑notch. Our team learned a lot.'},
+      {name:'Jonah Smith', role:'Ops, Fieldly', text:'Their maintenance plan gives us peace of mind. Highly recommended.'},
+    ];
+    const track = document.querySelector('#testimonialTrack .flex');
+    testimonials.forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'min-w-[320px] max-w-[360px] rounded-2xl border border-slate-200 bg-white p-6 shadow-soft';
+      card.innerHTML = `<div class="flex items-center gap-3">
+          <div class="h-10 w-10 rounded-full bg-brand/10 grid place-items-center">👤</div>
+          <div><div class="font-semibold">${t.name}</div><div class="text-xs text-slate-500">${t.role}</div></div>
+        </div>
+        <div class="mt-4 text-slate-700">${t.text}</div>
+        <div class="mt-3">⭐️⭐️⭐️⭐️⭐️</div>`;
+      track.appendChild(card);
+    });
+    // simple auto-scroll
+    let scrollPos = 0; setInterval(()=>{
+      scrollPos += 1; track.parentElement.scrollTo({left: scrollPos, behavior: 'smooth'});
+      if (scrollPos > track.scrollWidth) scrollPos = 0;
+    }, 40);
+  </script>
+</body>
+</html>
