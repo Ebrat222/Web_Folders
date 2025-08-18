@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Live Gradient Color Generator</title>
+  <style>
+    /* ========== Root + Theme (Glassmorphism) ========== */
+    :root{
+      --bg: #0f1226;
+      --card: rgba(255,255,255,0.1);
+      --card-2: rgba(255,255,255,0.08);
+      --stroke: rgba(255,255,255,0.2);
+      --text: #f4f6ff;
+      --muted: #c9cbe3;
+      --accent: #7c5cff;
+      --accent-2: #24d6a5;
+      --danger: #ff5e7c;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --radius: 14px;
+      --radius-sm: 10px;
+      --gap: 14px;
+      --gap-lg: 20px;
+      --focus: 0 0 0 3px rgba(124,92,255,0.4);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 15% -10%, #251a56 0%, transparent 60%),
+                  radial-gradient(800px 500px at 85% -10%, #0f6 0%, transparent 45%),
+                  radial-gradient(700px 500px at 50% 110%, #7c5cff 0%, transparent 50%),
+                  var(--bg);
+    }
+
+    .app {
+      max-width: 1100px;
+      margin: 28px auto;
+      padding: 0 16px 60px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--gap);
+      margin-bottom: 18px;
+    }
+    .title {
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      font-size: clamp(20px, 3.2vw, 32px);
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: var(--gap-lg);
+    }
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    /* Card */
+    .card {
+      background: linear-gradient(180deg, var(--card), var(--card-2));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+    }
+
+    /* Preview */
+    .preview {
+      position: relative;
+      min-height: 380px;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .preview-inner {
+      height: 100%;
+      width: 100%;
+      border-radius: inherit;
+    }
+    .preview-grid {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(0deg, rgba(255,255,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+
+    /* Controls */
+    .controls {
+      padding: 16px;
+      display: grid;
+      gap: var(--gap);
+    }
+    .row {
+      display: grid;
+      gap: 10px;
+    }
+    .row.cols-2 { grid-template-columns: 1fr 1fr; }
+    .row.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .row.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 700px) {
+      .row.cols-2, .row.cols-3, .row.cols-4 { grid-template-columns: 1fr; }
+    }
+    .group {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+    }
+    .group h3 {
+      font-size: 14px;
+      margin: 0 0 10px 0;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.3px;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .inputs {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    input[type="number"], input[type="text"] {
+      width: 90px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--stroke);
+      background: rgba(0,0,0,0.25);
+      color: var(--text);
+      outline: none;
+      transition: box-shadow .15s ease, border-color .15s ease;
+    }
+    input[type="color"] {
+      width: 44px; height: 34px;
+      border: 1px solid var(--stroke);
+      border-radius: 10px;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+    }
+    input:focus-visible { box-shadow: var(--focus); border-color: var(--accent); }
+
+    .line {
+      height: 1px;
+      background: var(--stroke);
+      margin: 4px 0;
+    }
+
+    /* Buttons */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      padding: 12px 16px 16px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--stroke);
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.06));
+      cursor: pointer;
+      transition: transform .06s ease, box-shadow .15s ease, background .2s ease;
+      user-select: none;
+    }
+    .btn:hover { box-shadow: 0 6px 18px rgba(124,92,255,0.25); }
+    .btn:active { transform: translateY(1px) scale(0.99); }
+    .btn.accent { border-color: transparent; background: linear-gradient(180deg, var(--accent), #5a3cff); }
+    .btn.ghost { background: rgba(255,255,255,0.04); }
+    .btn.small { padding: 7px 10px; border-radius: 10px; font-size: 13px; }
+
+    /* Code box */
+    .code {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-sm);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 12.5px;
+      color: #e6e8ff;
+      white-space: pre-wrap;
+      word-break: break-all;
+      min-height: 48px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%) translateY(20px);
+      background: #11141f;
+      color: var(--text);
+      border: 1px solid var(--stroke);
+      padding: 10px 14px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Helper layout for color rows */
+    .color-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px 14px;
+      align-items: center;
+    }
+    .badge {
+      font-size: 12px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid var(--stroke);
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <div class="title">Live Gradient Color Generator</div>
+        <div class="subtitle">Sliders you can feel. Numbers you can trust. Copy that just works.</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <!-- Preview Pane -->
+      <section class="card preview" aria-label="Gradient preview">
+        <div id="preview" class="preview-inner"></div>
+        <div class="preview-grid" aria-hidden="true"></div>
+      </section>
+
+      <!-- Controls Pane -->
+      <section class="card">
+        <div class="controls">
+          <!-- Angle / Direction -->
+          <div class="group">
+            <h3>Angle — কোণ (degrees)</h3>
+            <div class="inputs">
+              <input id="angleRange" type="range" min="0" max="360" step="1" value="45" aria-label="Angle range">
+              <input id="angleNumber" type="number" min="0" max="360" step="1" value="45" aria-label="Angle number">
+            </div>
+          </div>
+
+          <div class="line"></div>
+
+          <!-- Color Stop 1 -->
+          <div class="group">
+            <h3>Color Stop 1 — রং ১</h3>
+            <div class="color-grid">
+              <span class="badge">Picker</span>
+              <div class="row">
+                <input id="c1Picker" type="color" value="#7c5cff" aria-label="Color 1 picker">
+              </div>
+
+              <span class="badge">HEX</span>
+              <div class="row cols-2">
+                <label>
+                  <span>HEX — হেক্স</span>
+                  <input id="c1Hex" type="text" value="#7c5cff" maxlength="9" aria-label="Color 1 hex">
+                </label>
+              </div>
+
+              <span class="badge">RGB</span>
+              <div class="row cols-3">
+                <label><span>R</span><input id="c1R" type="number" min="0" max="255" value="124" aria-label="Color 1 R"></label>
+                <label><span>G</span><input id="c1G" type="number" min="0" max="255" value="92" aria-label="Color 1 G"></label>
+                <label><span>B</span><input id="c1B" type="number" min="0" max="255" value="255" aria-label="Color 1 B"></label>
+              </div>
+
+              <span class="badge">Opacity</span>
+              <div class="row cols-2">
+                <label>
+                  <span>Opacity — অস্বচ্ছতা (%)</span>
+                  <input id="c1A_num" type="number" min="0" max="100" step="1" value="100" aria-label="Color 1 opacity number">
+                </label>
+                <label>
+                  <span>Opacity — range</span>
+                  <input id="c1A_range" type="range" min="0" max="100" step="1" value="100" aria-label="Color 1 opacity range">
+                </label>
+              </div>
+
+              <span class="badge">Position</span>
+              <div class="row cols-2">
+                <label>
+                  <span>Position — অবস্থান (%)</span>
+                  <input id="c1Pos_num" type="number" min="0" max="100" step="1" value="0" aria-label="Color 1 position number">
+                </label>
+                <label>
+                  <span>Position — range</span>
+                  <input id="c1Pos_range" type="range" min="0" max="100" step="1" value="0" aria-label="Color 1 position range">
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Color Stop 2 -->
+          <div class="group">
+            <h3>Color Stop 2 — রং ২</h3>
+            <div class="color-grid">
+              <span class="badge">Picker</span>
+              <div class="row">
+                <input id="c2Picker" type="color" value="#24d6a5" aria-label="Color 2 picker">
+              </div>
+
+              <span class="badge">HEX</span>
+              <div class="row cols-2">
+                <label>
+                  <span>HEX — হেক্স</span>
+                  <input id="c2Hex" type="text" value="#24d6a5" maxlength="9" aria-label="Color 2 hex">
+                </label>
+              </div>
+
+              <span class="badge">RGB</span>
+              <div class="row cols-3">
+                <label><span>R</span><input id="c2R" type="number" min="0" max="255" value="36" aria-label="Color 2 R"></label>
+                <label><span>G</span><input id="c2G" type="number" min="0" max="255" value="214" aria-label="Color 2 G"></label>
+                <label><span>B</span><input id="c2B" type="number" min="0" max="255" value="165" aria-label="Color 2 B"></label>
+              </div>
+
+              <span class="badge">Opacity</span>
+              <div class="row cols-2">
+                <label>
+                  <span>Opacity — অস্বচ্ছতা (%)</span>
+                  <input id="c2A_num" type="number" min="0" max="100" step="1" value="100" aria-label="Color 2 opacity number">
+                </label>
+                <label>
+                  <span>Opacity — range</span>
+                  <input id="c2A_range" type="range" min="0" max="100" step="1" value="100" aria-label="Color 2 opacity range">
+                </label>
+              </div>
+
+              <span class="badge">Position</span>
+              <div class="row cols-2">
+                <label>
+                  <span>Position — অবস্থান (%)</span>
+                  <input id="c2Pos_num" type="number" min="0" max="100" step="1" value="100" aria-label="Color 2 position number">
+                </label>
+                <label>
+                  <span>Position — range</span>
+                  <input id="c2Pos_range" type="range" min="0" max="100" step="1" value="100" aria-label="Color 2 position range">
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Output -->
+          <div class="group">
+            <h3>CSS Output — আপনার CSS</h3>
+            <pre id="cssOut" class="code" aria-live="polite"></pre>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <button id="swapBtn" class="btn ghost small" type="button" title="Swap colors">⇄ Swap</button>
+          <button id="copyBtn" class="btn accent" type="button">📋 Copy CSS</button>
+      </section>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite">Copied!</div>
+
+  <script>
+    // ==========================
+    // Utilities — সহায়ক ফাংশন
+    // ==========================
+
+    // Clamp a number between min and max
+    // একটি সংখ্যাকে min-max সীমার মাঝে বাধা
+    const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+
+    // Normalize hex like "#abc" => "#aabbcc", supports optional alpha (#RRGGBBAA)
+    // ছোট হেক্সকে বড় ফরম্যাটে রূপান্তর, আলফা সমর্থিত
+    function normalizeHex(hex) {
+      if (!hex) return null;
+      hex = hex.trim().replace(/^#/,'').toLowerCase();
+      if (hex.length === 3 || hex.length === 4) {
+        hex = hex.split('').map(ch => ch + ch).join('');
+      }
+      if (hex.length !== 6 && hex.length !== 8) return null;
+      return '#' + hex;
+    }
+
+    function hexToRgbA(hex) {
+      const norm = normalizeHex(hex);
+      if (!norm) return null;
+      const h = norm.slice(1);
+      const r = parseInt(h.slice(0,2),16);
+      const g = parseInt(h.slice(2,4),16);
+      const b = parseInt(h.slice(4,6),16);
+      const a = h.length === 8 ? parseInt(h.slice(6,8),16) / 255 : 1;
+      return { r, g, b, a };
+    }
+
+    function rgbToHex(r,g,b,a=1) {
+      const h = n => clamp(Math.round(n),0,255).toString(16).padStart(2,'0');
+      const ha = clamp(Math.round(a*255),0,255).toString(16).padStart(2,'0');
+      return '#' + h(r) + h(g) + h(b) + (a<1 ? ha : '');
+    }
+
+    function makeGradientCSS({ angle, c1, c2 }) {
+      const p1 = clamp(c1.pos, 0, 100);
+      const p2 = clamp(c2.pos, 0, 100);
+      const s1 = `rgba(${c1.r}, ${c1.g}, ${c1.b}, ${c1.a.toFixed(3).replace(/0+$/,'').replace(/\.$/,'')}) ${p1}%`;
+      const s2 = `rgba(${c2.r}, ${c2.g}, ${c2.b}, ${c2.a.toFixed(3).replace(/0+$/,'').replace(/\.$/,'')}) ${p2}%`;
+      return `linear-gradient(${angle}deg, ${s1}, ${s2})`;
+    }
+
+    // ==========================
+    // State — অবস্থা
+    // ==========================
+    const state = {
+      angle: 45,
+      c1: { r:124, g:92,  b:255, a:1,   pos:0   },
+      c2: { r:36,  g:214, b:165, a:1,   pos:100 }
+    };
+
+    // ==========================
+    // DOM refs — ডম রেফারেন্স
+    // ==========================
+    const el = {
+      preview: document.getElementById('preview'),
+      cssOut: document.getElementById('cssOut'),
+      toast: document.getElementById('toast'),
+
+      angleRange: document.getElementById('angleRange'),
+      angleNumber: document.getElementById('angleNumber'),
+
+      c1Picker: document.getElementById('c1Picker'),
+      c1Hex: document.getElementById('c1Hex'),
+      c1R: document.getElementById('c1R'),
+      c1G: document.getElementById('c1G'),
+      c1B: document.getElementById('c1B'),
+      c1A_num: document.getElementById('c1A_num'),
+      c1A_range: document.getElementById('c1A_range'),
+      c1Pos_num: document.getElementById('c1Pos_num'),
+      c1Pos_range: document.getElementById('c1Pos_range'),
+
+      c2Picker: document.getElementById('c2Picker'),
+      c2Hex: document.getElementById('c2Hex'),
+      c2R: document.getElementById('c2R'),
+      c2G: document.getElementById('c2G'),
+      c2B: document.getElementById('c2B'),
+      c2A_num: document.getElementById('c2A_num'),
+      c2A_range: document.getElementById('c2A_range'),
+      c2Pos_num: document.getElementById('c2Pos_num'),
+      c2Pos_range: document.getElementById('c2Pos_range'),
+
+      copyBtn: document.getElementById('copyBtn'),
+      swapBtn: document.getElementById('swapBtn'),
+    };
+
+    // ==========================
+    // Sync helpers — সমন্বয়
+    // ==========================
+    function updateUIFromState() {
+      // Angle
+      el.angleRange.value = String(state.angle);
+      el.angleNumber.value = String(state.angle);
+
+      // C1
+      el.c1R.value = String(state.c1.r);
+      el.c1G.value = String(state.c1.g);
+      el.c1B.value = String(state.c1.b);
+      const hex1 = rgbToHex(state.c1.r, state.c1.g, state.c1.b, state.c1.a);
+      el.c1Hex.value = hex1;
+      el.c1Picker.value = rgbToHex(state.c1.r,state.c1.g,state.c1.b).slice(0,7); // no alpha for picker
+      el.c1A_num.value = String(Math.round(state.c1.a*100));
+      el.c1A_range.value = String(Math.round(state.c1.a*100));
+      el.c1Pos_num.value = String(state.c1.pos);
+      el.c1Pos_range.value = String(state.c1.pos);
+
+      // C2
+      el.c2R.value = String(state.c2.r);
+      el.c2G.value = String(state.c2.g);
+      el.c2B.value = String(state.c2.b);
+      const hex2 = rgbToHex(state.c2.r, state.c2.g, state.c2.b, state.c2.a);
+      el.c2Hex.value = hex2;
+      el.c2Picker.value = rgbToHex(state.c2.r,state.c2.g,state.c2.b).slice(0,7);
+      el.c2A_num.value = String(Math.round(state.c2.a*100));
+      el.c2A_range.value = String(Math.round(state.c2.a*100));
+      el.c2Pos_num.value = String(state.c2.pos);
+      el.c2Pos_range.value = String(state.c2.pos);
+
+      // Preview + code
+      const css = makeGradientCSS(state);
+      el.preview.style.background = css;
+      el.cssOut.textContent = `background: ${css};`;
+    }
+
+    function showToast(msg = 'Copied!') {
+      el.toast.textContent = msg;
+      el.toast.classList.add('show');
+      setTimeout(() => el.toast.classList.remove('show'), 1200);
+    }
+
+    // ==========================
+    // Event wiring — ইভেন্ট
+    // ==========================
+
+    // Angle
+    const onAngle = (v) => {
+      state.angle = clamp(parseInt(v || 0,10), 0, 360);
+      updateUIFromState();
+    };
+    el.angleRange.addEventListener('input', e => onAngle(e.target.value));
+    el.angleNumber.addEventListener('input', e => onAngle(e.target.value));
+
+    // Color 1: picker -> rgb/hex
+    el.c1Picker.addEventListener('input', e => {
+      const rgba = hexToRgbA(e.target.value);
+      if (!rgba) return;
+      state.c1.r = rgba.r; state.c1.g = rgba.g; state.c1.b = rgba.b;
+      // keep existing alpha
+      updateUIFromState();
+    });
+    // Color 1: hex -> rgb
+    el.c1Hex.addEventListener('input', e => {
+      const rgba = hexToRgbA(e.target.value);
+      if (!rgba) return; // wait until valid
+      state.c1.r = rgba.r; state.c1.g = rgba.g; state.c1.b = rgba.b;
+      if (typeof rgba.a === 'number') state.c1.a = rgba.a;
+      updateUIFromState();
+    });
+    // Color 1: RGB numbers
+    ['c1R','c1G','c1B'].forEach(key => {
+      el[key].addEventListener('input', () => {
+        state.c1.r = clamp(parseInt(el.c1R.value||0,10),0,255);
+        state.c1.g = clamp(parseInt(el.c1G.value||0,10),0,255);
+        state.c1.b = clamp(parseInt(el.c1B.value||0,10),0,255);
+        updateUIFromState();
+      });
+    });
+    // Color 1: opacity (range + number sync)
+    const syncC1A = (val) => {
+      const pct = clamp(parseInt(val||0,10),0,100);
+      state.c1.a = pct/100;
+      el.c1A_num.value = String(pct);
+      el.c1A_range.value = String(pct);
+      updateUIFromState();
+    };
+    el.c1A_num.addEventListener('input', e => syncC1A(e.target.value));
+    el.c1A_range.addEventListener('input', e => syncC1A(e.target.value));
+    // Color 1: position
+    const syncC1Pos = (val) => {
+      const p = clamp(parseInt(val||0,10),0,100);
+      state.c1.pos = p;
+      el.c1Pos_num.value = String(p);
+      el.c1Pos_range.value = String(p);
+      updateUIFromState();
+    };
+    el.c1Pos_num.addEventListener('input', e => syncC1Pos(e.target.value));
+    el.c1Pos_range.addEventListener('input', e => syncC1Pos(e.target.value));
+
+    // Color 2: picker
+    el.c2Picker.addEventListener('input', e => {
+      const rgba = hexToRgbA(e.target.value);
+      if (!rgba) return;
+      state.c2.r = rgba.r; state.c2.g = rgba.g; state.c2.b = rgba.b;
+      updateUIFromState();
+    });
+    // Color 2: hex
+    el.c2Hex.addEventListener('input', e => {
+      const rgba = hexToRgbA(e.target.value);
+      if (!rgba) return;
+      state.c2.r = rgba.r; state.c2.g = rgba.g; state.c2.b = rgba.b;
+      if (typeof rgba.a === 'number') state.c2.a = rgba.a;
+      updateUIFromState();
+    });
+    // Color 2: RGB
+    ['c2R','c2G','c2B'].forEach(key => {
+      el[key].addEventListener('input', () => {
+        state.c2.r = clamp(parseInt(el.c2R.value||0,10),0,255);
+        state.c2.g = clamp(parseInt(el.c2G.value||0,10),0,255);
+        state.c2.b = clamp(parseInt(el.c2B.value||0,10),0,255);
+        updateUIFromState();
+      });
+    });
+    // Color 2: opacity
+    const syncC2A = (val) => {
+      const pct = clamp(parseInt(val||0,10),0,100);
+      state.c2.a = pct/100;
+      el.c2A_num.value = String(pct);
+      el.c2A_range.value = String(pct);
+      updateUIFromState();
+    };
+    el.c2A_num.addEventListener('input', e => syncC2A(e.target.value));
+    el.c2A_range.addEventListener('input', e => syncC2A(e.target.value));
+    // Color 2: position
+    const syncC2Pos = (val) => {
+      const p = clamp(parseInt(val||0,10),0,100);
+      state.c2.pos = p;
+      el.c2Pos_num.value = String(p);
+      el.c2Pos_range.value = String(p);
+      updateUIFromState();
+    };
+    el.c2Pos_num.addEventListener('input', e => syncC2Pos(e.target.value));
+    el.c2Pos_range.addEventListener('input', e => syncC2Pos(e.target.value));
+
+    // Swap colors — রং অদলবদল
+    el.swapBtn.addEventListener('click', () => {
+      const tmp = JSON.parse(JSON.stringify(state.c1));
+      state.c1 = state.c2;
+      state.c2 = tmp;
+      updateUIFromState();
+    });
+
+    // Copy CSS
+    el.copyBtn.addEventListener('click', async () => {
+      const css = `background: ${makeGradientCSS(state)};`;
+      try {
+        await navigator.clipboard.writeText(css);
+        showToast('CSS copied!');
+      } catch {
+        // Fallback: select-able text already visible
+        showToast('Select + copy from the box');
+      }
+    });
+
+    // Init
+    updateUIFromState();
+  </script>
+</body>
+</html>
