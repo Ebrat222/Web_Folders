@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Color Generator V2</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-top: 30px;
+      font-size: 2.2em;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+
+    .container {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .color-box {
+      width: 100%;
+      height: 200px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      transition: background 0.5s ease;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    #colorCode {
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .mode-buttons button {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      padding: 10px 15px;
+      margin: 5px;
+      border-radius: 10px;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .mode-buttons button:hover {
+      background: rgba(255,255,255,0.4);
+    }
+
+    .sliders label {
+      display: block;
+      margin: 10px 0;
+    }
+
+    .sliders input {
+      width: 100%;
+    }
+
+    .copy-btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #ffffff22;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      background: #ffffff44;
+    }
+  </style>
+</head>
+<body>
+  <h1>Live Color Generator</h1>
+  <div class="container">
+    <div class="color-box" id="colorBox"></div>
+    <p id="colorCode">rgb(0, 0, 0)</p>
+
+    <div class="mode-buttons">
+      <button onclick="setMode('rgb')">RGB</button>
+      <button onclick="setMode('rgba')">RGBA</button>
+      <button onclick="setMode('hsl')">HSL</button>
+      <button onclick="setMode('gradient')">Gradient</button>
+    </div>
+
+    <div class="sliders" id="sliders">
+      <label>Red: <input type="range" min="0" max="255" id="r" /></label>
+      <label>Green: <input type="range" min="0" max="255" id="g" /></label>
+      <label>Blue: <input type="range" min="0" max="255" id="b" /></label>
+      <label>Alpha: <input type="range" min="0" max="1" step="0.01" id="a" /></label>
+      <label>Hue: <input type="range" min="0" max="360" id="h" /></label>
+      <label>Saturation: <input type="range" min="0" max="100" id="s" /></label>
+      <label>Lightness: <input type="range" min="0" max="100" id="l" /></label>
+    </div>
+
+    <button class="copy-btn" onclick="copyColor()">Copy</button>
+  </div>
+
+  <script>
+    let mode = 'rgb';
+
+    function setMode(newMode) {
+      mode = newMode;
+      updateColor();
+    }
+
+    const sliders = document.querySelectorAll('#sliders input');
+    sliders.forEach(slider => {
+      slider.addEventListener('input', updateColor);
+    });
+
+    function updateColor() {
+      let color;
+      const r = document.getElementById("r").value || 0;
+      const g = document.getElementById("g").value || 0;
+      const b = document.getElementById("b").value || 0;
+      const a = document.getElementById("a").value || 1;
+      const h = document.getElementById("h").value || 0;
+      const s = document.getElementById("s").value || 100;
+      const l = document.getElementById("l").value || 50;
+
+      if (mode === 'rgb') {
+        color = `rgb(${r}, ${g}, ${b})`;
+      } else if (mode === 'rgba') {
+        color = `rgba(${r}, ${g}, ${b}, ${a})`;
+      } else if (mode === 'hsl') {
+        color = `hsl(${h}, ${s}%, ${l}%)`;
+      } else if (mode === 'gradient') {
+        const color1 = `rgb(${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)})`;
+        const color2 = `rgb(${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)})`;
+        color = `linear-gradient(to right, ${color1}, ${color2})`;
+        document.getElementById("colorBox").style.background = color;
+        document.getElementById("colorCode").textContent = color;
+        return;
+      }
+
+      document.getElementById("colorBox").style.background = color;
+      document.getElementById("colorCode").textContent = color;
+    }
+
+    function copyColor() {
+      const color = document.getElementById("colorCode").textContent;
+      navigator.clipboard.writeText(color);
+      alert("Copied: " + color);
+    }
+
+    updateColor(); // Initial color
+  </script>
+</body>
+</html>
