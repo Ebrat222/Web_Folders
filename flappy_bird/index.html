@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no" />
+  <title>Flappy Bird — Hunter JS</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #70c5ce; /* sky */
+      height: 100%;
+      overscroll-behavior: none;
+      touch-action: manipulation; /* faster taps */
+    }
+    #game {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .ui {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color: #fff; text-align: center;
+    }
+    .badge {
+      position: fixed;
+      top: calc(env(safe-area-inset-top, 0px) + 12px);
+      left: 12px; right: 12px;
+      display: flex; justify-content: space-between;
+      pointer-events: none;
+      font-weight: 700; text-shadow: 0 2px 0 #0003;
+    }
+    .btn {
+       display: none;
+      position: fixed;
+      top: calc(env(safe-area-inset-top, 0px) + 12px);
+      right: 12px;
+      padding: 8px 12px;
+      background: #0008; color: #fff; border-radius: 8px; border: 0;
+      font-weight: 600; pointer-events: auto;
+    }
+    .message {
+      background: #0008; padding: 16px 20px; border-radius: 12px; max-width: 90vw;
+      pointer-events: none;
+    }
+    .small { font-size: 14px; opacity: 0.9; }
+  </style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+
+  <div class="ui" id="overlay">
+    <div class="message">
+      <div style="font-size:28px;font-weight:800">Tap to start • Tap to flap</div>
+      <div class="small">Best on Android Game. Use the button to toggle.</div>
+    </div>
+  </div>
+
+  <div class="badge" id="hud">
+    <div id="score">Score: 0</div>
+    <div id="best">Best: 0</div>
+  </div>
+
+  <button class="btn" id="fs">Hunter</button>
+
+  <script>
+    // Flappy Bird — fullscreen, touch-friendly, high-DPI scaled.
+    (() => {
+      const canvas = document.getElementById('game');
+      const ctx = canvas.getContext('2d');
+      const overlay = document.getElementById('overlay');
+      const scoreEl = document.getElementById('score');
+      const bestEl = document.getElementById('best');
+      const fsBtn = document.getElementById('fs');
+
+      // Handle high-DPI and resize
+      let dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2)); // cap for perf
+      function resize() {
+        dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
+        const w = Math.floor(window.innerWidth);
+        const h = Math.floor(window.innerHeight);
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      window.addEventListener('resize', resize, { passive: true });
+      resize();
+
+      // Game state
+      const state = {
+        running: false,
+        gameOver: false,
+        started: false,
+        score: 0,
+        best: Number(localStorage.getItem('flappy_best') || 0),
+        time: 0,
+        lastTime: 0
+      };
+
+      // World settings (tweak here)
+      const world = {
+        gravity: 1400,   // px/s^2
+        flap: -380,      // initial jump velocity (negative = up)
+        pipeGap: 220,    // vertical gap between pipes
+        pipeW: 80,
+        pipeSpacing: 320,
+        speed: 160,      // pipe speed in px/s
+        groundH: 88
+      };
+
+      // Bird
+      const bird = { x: 0, y: 0, r: 18, vy: 0 };
+
+      // Pipes array
+      let pipes = [];
+
+      function reset() {
+        state.running = false;
+        state.gameOver = false;
+        state.started = false;
+        state.score = 0;
+        state.time = 0;
+        state.lastTime = performance.now();
+
+        bird.x = Math.round((canvas.width / dpr) * 0.28);
+        bird.y = Math.round((canvas.height / dpr) * 0.5);
+        bird.vy = 0;
+        bird.r = Math.round(Math.min(canvas.width/dpr, canvas.height/dpr) * 0.018) || 18;
+
+        pipes = [];
+        spawnInitialPipes();
+        updateHUD();
+        overlay.style.display = 'flex';
+      }
+
+      function updateHUD() {
+        scoreEl.textContent = 'Score: ' + state.score;
+        bestEl.textContent = 'Best: ' + state.best;
+      }
+
+      function spawnInitialPipes() {
+        const w = canvas.width / dpr;
+        let x = w + 200;
+        for (let i = 0; i < 5; i++) {
+          pipes.push(makePipe(x));
+          x += world.pipeSpacing;
+        }
+      }
+
+      function makePipe(x) {
+        const h = canvas.height / dpr;
+        const minTop = 60;
+        const maxBottom = h - world.groundH - 60;
+        const gap = world.pipeGap;
+        const topHeight = Math.floor(Math.random() * (maxBottom - minTop - gap)) + minTop;
+        return {
+          x,
+          w: world.pipeW,
+          top: topHeight,
+          bottom: h - world.groundH - (topHeight + gap),
+          passed: false
+        };
+        // top = top pipe height; bottom = bottom pipe height
+      }
+
+      function start() {
+        if (state.gameOver) reset();
+        overlay.style.display = 'none';
+        if (!state.started) {
+          state.started = true;
+          state.running = true;
+          tryEnterFullscreen();
+          tryLockLandscape();
+          state.lastTime = performance.now();
+          requestAnimationFrame(loop);
+        }
+        flap();
+      }
+
+      function flap() {
+        if (!state.running) return;
+        bird.vy = world.flap;
+      }
+
+      async function tryEnterFullscreen() {
+        const el = document.documentElement;
+        if (!document.fullscreenElement && el.requestFullscreen) {
+          try { await el.requestFullscreen({ navigationUI: 'hide' }); } catch {}
+        }
+      }
+
+      async function tryLockLandscape() {
+        if (screen.orientation && screen.orientation.lock) {
+          try { await screen.orientation.lock('landscape'); } catch {}
+        }
+      }
+
+      function gameOver() {
+        state.gameOver = true;
+        state.running = false;
+        state.best = Math.max(state.best, state.score);
+        localStorage.setItem('flappy_best', String(state.best));
+        updateHUD();
+        overlay.style.display = 'flex';
+      }
+
+      function update(dt) {
+        state.time += dt;
+
+        // Bird physics
+        bird.vy += world.gravity * dt;
+        bird.y += bird.vy * dt;
+
+        const w = canvas.width / dpr;
+        const h = canvas.height / dpr;
+
+        // Ground collision
+        const groundY = h - world.groundH;
+        if (bird.y + bird.r > groundY) {
+          bird.y = groundY - bird.r;
+          return gameOver();
+        }
+        // Ceiling collision
+        if (bird.y - bird.r < 0) {
+          bird.y = bird.r;
+          bird.vy = 0;
+        }
+
+        // Move pipes
+        for (const p of pipes) p.x -= world.speed * dt;
+
+        // Recycle pipes and score
+        const first = pipes[0];
+        if (first && first.x + first.w < -10) pipes.shift();
+        const lastX = pipes[pipes.length - 1]?.x || 0;
+        if (pipes.length < 7 && lastX < w + 100) {
+          pipes.push(makePipe(lastX + world.pipeSpacing));
+        }
+
+        // Score when passing pipe center
+        for (const p of pipes) {
+          const center = p.x + p.w / 2;
+          if (!p.passed && center < bird.x) {
+            p.passed = true;
+            state.score++;
+            updateHUD();
+          }
+        }
+
+        // Collisions with pipes
+        for (const p of pipes) {
+          if (rectCircleCollide(bird.x, bird.y, bird.r, p.x, 0, p.w, p.top) ||
+              rectCircleCollide(bird.x, bird.y, bird.r, p.x, h - world.groundH - p.bottom, p.w, p.bottom)) {
+            return gameOver();
+          }
+        }
+      }
+
+      // Circle-rectangle collision
+      function rectCircleCollide(cx, cy, r, rx, ry, rw, rh) {
+        const closestX = Math.max(rx, Math.min(cx, rx + rw));
+        const closestY = Math.max(ry, Math.min(cy, ry + rh));
+        const dx = cx - closestX;
+        const dy = cy - closestY;
+        return (dx*dx + dy*dy) <= r*r;
+      }
+
+      function draw() {
+        const w = canvas.width / dpr;
+        const h = canvas.height / dpr;
+
+        // Sky
+        ctx.fillStyle = '#70c5ce';
+        ctx.fillRect(0, 0, w, h);
+
+        // Pipes
+        for (const p of pipes) {
+          // Top pipe
+          ctx.fillStyle = '#5ec269';
+          ctx.fillRect(p.x, 0, p.w, p.top);
+          // Bottom pipe
+          ctx.fillRect(p.x, h - world.groundH - p.bottom, p.w, p.bottom);
+          // Pipe lips
+          ctx.fillStyle = '#4aa356';
+          ctx.fillRect(p.x - 4, p.top - 16, p.w + 8, 16);
+          ctx.fillRect(p.x - 4, h - world.groundH, p.w + 8, 16);
+        }
+
+        // Ground
+        ctx.fillStyle = '#ded895';
+        ctx.fillRect(0, h - world.groundH, w, world.groundH);
+        // Ground stripes
+        ctx.fillStyle = '#c9c16f';
+        for (let x = -((state.time * 120) % 40); x < w; x += 40) {
+          ctx.fillRect(x, h - world.groundH + 44, 20, 12);
+        }
+
+        // Bird (simple vector drawing)
+        ctx.save();
+        ctx.translate(bird.x, bird.y);
+        const angle = Math.max(-0.5, Math.min(0.8, bird.vy / 500));
+        ctx.rotate(angle);
+        // Body
+        ctx.fillStyle = '#ffeb3b';
+        drawCircle(0, 0, bird.r);
+        // Eye
+        ctx.fillStyle = '#fff';
+        drawCircle(bird.r*0.35, -bird.r*0.25, bird.r*0.35);
+        ctx.fillStyle = '#333';
+        drawCircle(bird.r*0.55, -bird.r*0.25, bird.r*0.15);
+        // Beak
+        ctx.fillStyle = '#ff9800';
+        ctx.beginPath();
+        ctx.moveTo(bird.r*0.9, 0);
+        ctx.lineTo(bird.r*1.4, bird.r*0.15);
+        ctx.lineTo(bird.r*0.9, bird.r*0.3);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        // Big score while playing
+        if (state.running && !state.gameOver) {
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 48px system-ui, Segoe UI, Roboto, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'top';
+          ctx.fillText(state.score, w / 2, 20);
+        }
+      }
+
+      function drawCircle(x, y, r) {
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      function loop(now) {
+        if (!state.running) return;
+        const dt = Math.min(0.033, (now - state.lastTime) / 1000); // clamp to avoid big jumps
+        state.lastTime = now;
+        update(dt);
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      // Input handlers
+      function onPress(e) {
+        e.preventDefault();
+        if (!state.started || state.gameOver) start();
+        else flap();
+      }
+      canvas.addEventListener('pointerdown', onPress, { passive: false });
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' || e.code === 'ArrowUp') onPress(e);
+        if (e.code === 'KeyP') {
+          if (state.running) { state.running = false; overlay.style.display = 'flex'; }
+          else { state.running = true; overlay.style.display = 'none'; state.lastTime = performance.now(); requestAnimationFrame(loop); }
+        }
+      });
+
+      // Pause when tab hidden
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && state.running) {
+          state.running = false;
+          overlay.style.display = 'flex';
+        }
+      });
+
+      // Fullscreen toggle button
+      fsBtn.addEventListener('click', async () => {
+        if (!document.fullscreenElement) {
+          try { await document.documentElement.requestFullscreen({ navigationUI: 'hide' }); } catch {}
+        } else if (document.exitFullscreen) {
+          try { await document.exitFullscreen(); } catch {}
+        }
+      });
+
+      // Boot
+      reset();
+    })();
+  </script>
+</body>
+  </html>
