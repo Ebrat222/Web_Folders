@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flappy Bird Final</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      background: #70c5ce;
+      height: 100%; overflow: hidden;
+      touch-action: manipulation;
+    }
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+    #overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: sans-serif;
+      font-size: 28px;
+      font-weight: bold;
+      text-align: center;
+      background: rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="overlay">Tap or Press Space to Start</div>
+
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+    const overlay = document.getElementById("overlay");
+
+    let width, height, dpr;
+    function resize() {
+      dpr = window.devicePixelRatio || 1;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    // Settings
+    const gravity = 0.5;
+    const flapStrength = -8;
+    let pipeGap = 160;
+    let pipeSpacing = 320;
+    const pipeWidth = 70;
+    let pipeSpeed = 3;
+    const groundHeight = 80;
+    const birdSize = 28;
+
+    // State
+    let bird, pipes, score, running, frame, groundX;
+    let bestScore = parseInt(localStorage.getItem("bestScore")) || 0; // load best score
+
+    // Clouds (randomized multi-circle)
+    let clouds = [];
+    function spawnCloud() {
+      const y = Math.random() * (height * 0.4);
+      const scale = 0.5 + Math.random() * 1.5; // random size
+      const speed = 0.2 + Math.random() * 0.6; // random speed
+
+      // each cloud made of 3–5 circles
+      let parts = [];
+      let circles = 3 + Math.floor(Math.random() * 3);
+      for (let i = 0; i < circles; i++) {
+        parts.push({
+          x: Math.random() * 40 - 20, // horizontal offset
+          y: Math.random() * 20 - 10, // vertical offset
+          r: 15 + Math.random() * 20  // radius
+        });
+      }
+
+      clouds.push({
+        x: width + 100,
+        y,
+        scale,
+        speed,
+        parts
+      });
+    }
+    for (let i = 0; i < 5; i++) spawnCloud();
+
+    function resetGame() {
+      bird = { x: width * 0.3, y: height / 2, vy: 0 };
+      pipes = [];
+      score = 0;
+      frame = 0;
+      groundX = 0;
+      pipeSpeed = 3; // reset each game
+      running = false;
+    }
+
+    function startGame() {
+      if (!running) {
+        running = true;
+        overlay.style.display = "none";
+        requestAnimationFrame(loop);
+      }
+    }
+
+    function flap() {
+      if (!running) startGame();
+      bird.vy = flapStrength;
+    }
+
+    function spawnPipe() {
+      const top = Math.random() * (height - groundHeight - pipeGap - 100) + 50;
+      pipes.push({ x: width, top });
+    }
+
+    function update() {
+      frame++;
+
+      // Bird physics
+      bird.vy += gravity;
+      bird.y += bird.vy;
+
+      // Spawn pipes based on spacing
+      if (pipes.length === 0 || (width - pipes[pipes.length - 1].x) >= pipeSpacing) {
+        spawnPipe();
+      }
+
+      // Move pipes
+      pipes.forEach(p => p.x -= pipeSpeed);
+
+      // Remove old pipes + score
+      if (pipes.length && pipes[0].x + pipeWidth < 0) {
+        pipes.shift();
+        score++;
+
+        // Every 50 points, increase speed
+        if (score % 50 === 0) {
+          pipeSpeed += 1;
+        }
+      }
+
+      // Move clouds
+      for (let c of clouds) {
+        c.x -= c.speed;
+      }
+      if (clouds[0].x + 100 < 0) {
+        clouds.shift();
+        spawnCloud();
+      }
+
+      // Ground scroll
+      groundX = (groundX - pipeSpeed) % 40;
+
+      // Collisions
+      if (bird.y + birdSize/2 > height - groundHeight || bird.y - birdSize/2 < 0) {
+        gameOver();
+      }
+      for (const p of pipes) {
+        if (
+          bird.x + birdSize/2 > p.x && bird.x - birdSize/2 < p.x + pipeWidth &&
+          (bird.y - birdSize/2 < p.top || bird.y + birdSize/2 > p.top + pipeGap)
+        ) {
+          gameOver();
+        }
+      }
+    }
+
+    function draw() {
+      ctx.fillStyle = "#70c5ce";
+      ctx.fillRect(0, 0, width, height);
+
+      // Clouds
+      ctx.fillStyle = "white";
+      for (let c of clouds) {
+        ctx.save();
+        ctx.translate(c.x, c.y);
+        ctx.scale(c.scale, c.scale);
+        for (let p of c.parts) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      // Pipes
+      ctx.fillStyle = "#5ec269";
+      for (const p of pipes) {
+        ctx.fillRect(p.x, 0, pipeWidth, p.top);
+        ctx.fillRect(p.x, p.top + pipeGap, pipeWidth, height - p.top - pipeGap - groundHeight);
+      }
+
+      // Ground
+      ctx.fillStyle = "#ded895";
+      ctx.fillRect(0, height - groundHeight, width, groundHeight);
+      ctx.fillStyle = "#c9c16f";
+      for (let x = groundX; x < width; x += 40) {
+        ctx.fillRect(x, height - groundHeight + 44, 20, 12);
+      }
+
+      // Bird (yellow circle only)
+      ctx.save();
+      ctx.translate(bird.x, bird.y);
+      ctx.fillStyle = "yellow";
+      ctx.beginPath();
+      ctx.arc(0, 0, birdSize / 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Score
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold 40px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(score, width / 2, 40);
+
+      // Best score (top-left corner)
+      ctx.textAlign = "left";
+      ctx.font = "bold 20px sans-serif";
+      ctx.fillText("Best: " + bestScore, 20, 40);
+    }
+
+    function loop() {
+      if (!running) return;
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    function gameOver() {
+      running = false;
+
+      // Update best score
+      if (score > bestScore) {
+        bestScore = score;
+        localStorage.setItem("bestScore", bestScore);
+      }
+
+      overlay.innerHTML =
+        "Game Over<br>" +
+        "Score: " + score + "<br>" +
+        "Best: " + bestScore + "<br><br>" +
+        "Tap or Press Space to Restart";
+      overlay.style.display = "flex";
+      resetGame();
+    }
+
+    // Input
+    window.addEventListener("keydown", e => {
+      if (e.code === "Space" || e.code === "ArrowUp") flap();
+    });
+    window.addEventListener("pointerdown", flap);
+
+    resetGame();
+  </script>
+</body>
+</html>
