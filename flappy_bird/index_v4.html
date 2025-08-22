@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <title>Flappy Bird Clone</title>
+  <style>
+    body {
+      background: #70c5ce;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+    canvas {
+      background: #70c5ce;
+      border: 2px solid #000;
+      touch-action: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="400" height="500"></canvas>
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Bird
+    let birdX, birdY, birdRadius, gravity, lift, velocity;
+
+    // Pipes
+    let pipes, pipeWidth, gap, pipeSpeed;
+
+    // Score
+    let score, gameOverFlag;
+
+    function initGame() {
+      birdX = 50;
+      birdY = 150;
+      birdRadius = 12;
+      gravity = 0.6;   // smooth falling
+      lift = -7;       // softer jump
+      velocity = 0;
+
+      pipes = [];
+      pipeWidth = 50;
+      gap = 140;       // easier to pass
+      pipeSpeed = 1.5; // balanced speed
+      score = 0;
+      gameOverFlag = false;
+
+      pipes.push({
+        x: canvas.width,
+        y: Math.floor(Math.random() * (canvas.height - gap))
+      });
+    }
+
+    // Controls
+    function jump() {
+      if (!gameOverFlag) velocity = lift;
+      else restartGame();
+    }
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "Space" || e.code === "ArrowUp") {
+        jump();
+      }
+    });
+    document.addEventListener("touchstart", jump);
+
+    // Game Loop
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (!gameOverFlag) {
+        // Bird
+        ctx.beginPath();
+        ctx.arc(birdX, birdY, birdRadius, 0, Math.PI * 2);
+        ctx.fillStyle = "yellow";
+        ctx.fill();
+        ctx.closePath();
+
+        // Bird physics
+        velocity += gravity;
+        birdY += velocity;
+
+        // Pipes
+        for (let i = 0; i < pipes.length; i++) {
+          let pipeX = pipes[i].x;
+          let pipeY = pipes[i].y;
+
+          ctx.fillStyle = "green";
+          ctx.fillRect(pipeX, 0, pipeWidth, pipeY);
+          ctx.fillRect(pipeX, pipeY + gap, pipeWidth, canvas.height - pipeY - gap);
+
+          pipes[i].x -= pipeSpeed;
+
+          if (pipes[i].x + pipeWidth < 0) {
+            pipes.splice(i, 1);
+            i--;
+            score++;
+            pipes.push({
+              x: canvas.width,
+              y: Math.floor(Math.random() * (canvas.height - gap))
+            });
+          }
+
+          // Collision
+          if (
+            birdX + birdRadius > pipeX &&
+            birdX - birdRadius < pipeX + pipeWidth &&
+            (birdY - birdRadius < pipeY || birdY + birdRadius > pipeY + gap)
+          ) {
+            gameOver();
+          }
+        }
+
+        // Ground / Top collision
+        if (birdY + birdRadius > canvas.height || birdY - birdRadius < 0) {
+          gameOver();
+        }
+
+        // Score
+        ctx.fillStyle = "#000";
+        ctx.font = "20px Arial";
+        ctx.fillText("Score: " + score, 10, 20);
+
+      } else {
+        // Game Over screen
+        ctx.fillStyle = "rgba(0,0,0,0.5)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "white";
+        ctx.font = "28px Arial";
+        ctx.fillText("Game Over!", canvas.width / 2 - 70, canvas.height / 2 - 20);
+
+        ctx.font = "20px Arial";
+        ctx.fillText("Score: " + score, canvas.width / 2 - 40, canvas.height / 2 + 10);
+
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(canvas.width / 2 - 60, canvas.height / 2 + 40, 120, 40);
+
+        ctx.fillStyle = "black";
+        ctx.font = "20px Arial";
+        ctx.fillText("RESTART", canvas.width / 2 - 45, canvas.height / 2 + 67);
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    function gameOver() {
+      gameOverFlag = true;
+    }
+
+    function restartGame() {
+      initGame();
+    }
+
+    // Start game
+    initGame();
+    draw();
+  </script>
+</body>
+</html>
