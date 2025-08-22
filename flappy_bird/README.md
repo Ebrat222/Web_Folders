@@ -11,7 +11,7 @@ https://ebrat222.github.io/Web_Folders/flappy_bird/index_v2.html
 
 ---------------
 
-Flappy Bird V3
+Flappy Bird V3 (Issue Sometimes)
 
 https://ebrat222.github.io/Web_Folders/flappy_bird/index_v3.html
 
