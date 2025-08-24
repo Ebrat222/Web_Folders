@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Saiyan Form Background Changer</title>
+  <style>
+    /* ========== Base Setup ========== */
+    :root {
+      /* These variables get updated by JS based on Saiyan + Form */
+      --bg1: #0b1021;         /* deep base */
+      --bg2: #111836;         /* accent base */
+      --glow: rgba(255,255,255,0.15);
+      --text: #e9eef6;
+      --accent: #9ecbff;      /* used for small highlights/borders */
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #0a0e1a;
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      min-height: 100%;
+    }
+
+    .wrap {
+      max-width: 900px;
+      margin: 32px auto;
+      padding: 16px;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin: 0 0 12px;
+      letter-spacing: 0.3px;
+    }
+    p.sub {
+      margin: 0 0 18px;
+      color: #b6c3d9;
+      font-size: 0.95rem;
+    }
+
+    /* ========== Controls ========== */
+    .controls {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 600px) {
+      .controls { grid-template-columns: 1fr; }
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      color: #c5d3ea;
+      margin-bottom: 6px;
+    }
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      background: #10172a;
+      color: var(--text);
+      border: 1px solid #26324a;
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 150ms ease;
+    }
+    select:focus { border-color: var(--accent); }
+
+    /* ========== Saiyan Card ========== */
+    .card {
+      position: relative;
+      border-radius: 18px;
+      padding: 22px;
+      overflow: hidden;
+      /* Layer 1: subtle star specks */
+      background:
+        radial-gradient(1200px 600px at -10% -20%, rgba(255,255,255,0.05) 0, transparent 40%) no-repeat,
+        radial-gradient(1000px 500px at 110% 120%, rgba(255,255,255,0.04) 0, transparent 40%) no-repeat,
+        /* Layer 2: animated conic shimmer */
+        conic-gradient(from 0deg at 50% 50%, transparent 0 85%, rgba(255,255,255,0.05) 90%, transparent 100%),
+        /* Layer 3: main gradient driven by variables */
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      background-size:
+        100% 100%,
+        100% 100%,
+        200% 200%,
+        100% 100%;
+      animation: shimmer 8s linear infinite;
+      box-shadow:
+        0 0 24px 6px var(--glow),
+        inset 0 0 48px 12px rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: background 400ms ease, box-shadow 400ms ease, border-color 300ms ease;
+    }
+
+    /* Aura bloom overlay */
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background: radial-gradient(circle at 50% 50%, var(--glow) 0 30%, transparent 60%);
+      filter: blur(28px);
+      opacity: 0.6;
+      pointer-events: none;
+      transition: opacity 400ms ease;
+    }
+
+    /* Floating energy motes */
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 0 2px, transparent 3px),
+        radial-gradient(circle at 70% 60%, rgba(255,255,255,0.06) 0 1.5px, transparent 2.5px),
+        radial-gradient(circle at 40% 80%, rgba(255,255,255,0.07) 0 2px, transparent 3px);
+      background-size: 100% 100%;
+      animation: motes 10s ease-in-out infinite;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: 0.5;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%; }
+      50%  { background-position: 0% 0%, 0% 0%, 100% 100%, 0% 0%; }
+      100% { background-position: 0% 0%, 0% 0%, 200% 200%, 0% 0%; }
+    }
+    @keyframes motes {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(0,0,0,0.2);
+      backdrop-filter: blur(4px);
+    }
+
+    .title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .form-name {
+      font-size: 1.05rem;
+      opacity: 0.95;
+    }
+
+    .hint {
+      margin-top: 14px;
+      color: #c7d4eb;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    /* Small footer note */
+    .foot {
+      margin-top: 18px;
+      font-size: 0.85rem;
+      color: #8fa6c8;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Saiyan Aura Box</h1>
+    <p class="sub">Choose a Saiyan and form — the box will transform to match that aura.</p>
+
+    <div class="controls">
+      <div>
+        <label for="saiyanSelect">Saiyan</label>
+        <select id="saiyanSelect" aria-label="Choose Saiyan">
+          <!-- JS will populate these; fallback is here for no-JS environments -->
+          <option>Goku</option>
+          <option>Vegeta</option>
+          <option>Broly</option>
+          <option>Gohan</option>
+        </select>
+      </div>
+      <div>
+        <label for="formSelect">Form</label>
+        <select id="formSelect" aria-label="Choose Form">
+          <!-- JS will populate contextually based on Saiyan -->
+        </select>
+      </div>
+    </div>
+
+    <div id="saiyanCard" class="card" role="region" aria-live="polite" aria-label="Saiyan aura display">
+      <div class="row" style="margin-bottom: 6px;">
+        <span id="saiyanBadge" class="badge">Goku</span>
+        <span id="formBadge" class="badge">Base Form</span>
+      </div>
+      <div class="row">
+        <div class="title" id="titleText">Goku</div>
+        <div class="form-name" id="formText">Base Form</div>
+      </div>
+      <div class="hint">Tip: Try switching to Legendary Super Saiyan or Ultra Ego.</div>
+    </div>
+
+    <div class="foot">Built for smooth transitions, mobile-friendly, and easy to extend. মন্তব্য: রং এবং ফর্ম সহজে কাস্টমাইজ করা যাবে।</div>
+  </div>
+
+  <script>
+    // ===== Data: Saiyans and their Forms =====
+    const FORMS = {
+      "Goku": [
+        "Base Form",
+        "Super Saiyan",
+        "Super Saiyan 2",
+        "Super Saiyan 3",
+        "Super Saiyan 4",
+        "Effective Ultra Instinct",
+        "Mastered Ultra Instinct",
+        "Silver Ultra Instinct"
+      ],
+      "Vegeta": [
+        "Base Form",
+        "Super Saiyan",
+        "Super Saiyan 2",
+        "Super Saiyan 3",
+        "Super Saiyan 4",
+        "Ultra Ego"
+      ],
+      "Broly": [
+        "Base Form",
+        "Super Saiyan",
+        "Legendary Super Saiyan"
+      ],
+      "Gohan": [
+        "Base Form",
+        "Super Saiyan",
+        "Super Saiyan 2",
+        "Beast Gohan"
+      ]
+    };
+
+    // ===== Style mapping: returns colors for a given (Saiyan, Form) =====
+    // Colors are inspired by common aura depictions.
+    function getStyle(saiyan, form) {
+      // Defaults (Base)
+      let style = {
+        bg1: "#0b1021",
+        bg2: "#161a2b",
+        glow: "rgba(255,255,255,0.18)",
+        accent: "#9ecbff"
+      };
+
+      const set = (bg1, bg2, glow, accent) => ({ bg1, bg2, glow, accent });
+
+      // Generic forms shared by multiple Saiyans
+      const generic = {
+        "Base Form":            set("#0b1021", "#161a2b", "rgba(255,255,255,0.18)", "#9ecbff"),
+        "Super Saiyan":         set("#3a2b00", "#f7c200", "rgba(255,215,0,0.75)",   "#ffd86b"),
+        "Super Saiyan 2":       set("#0a1a3a", "#ffd400", "rgba(80,180,255,0.9)",   "#90d7ff"),
+        "Super Saiyan 3":       set("#8a5a00", "#ffb300", "rgba(255,170,0,0.85)",   "#ffc46b"),
+        "Super Saiyan 4":       set("#1a0006", "#b3002d", "rgba(255,30,60,0.82)",   "#ff7b9e"),
+      };
+
+      // Start from generic if exists
+      if (generic[form]) style = generic[form];
+
+      // Unique/rare forms
+      if (form === "Legendary Super Saiyan" && saiyan === "Broly") {
+        style = set("#083b00", "#8cff00", "rgba(170,255,0,0.9)", "#c7ff6e");
+      }
+      if (form === "Ultra Ego" && saiyan === "Vegeta") {
+        style = set("#1b0030", "#a400ff", "rgba(200,80,255,0.9)", "#d9a6ff");
+      }
+      if (form === "Beast Gohan" && saiyan === "Gohan") {
+        style = set("#1a1a1a", "#ff3ea5", "rgba(255,80,170,0.95)", "#ffc2e3");
+      }
+
+      // Goku's Ultra Instinct variations
+      if (saiyan === "Goku") {
+        if (form === "Effective Ultra Instinct") {
+          style = set("#0a1022", "#6fb6ff", "rgba(180,220,255,0.92)", "#bfe0ff");
+        }
+        if (form === "Mastered Ultra Instinct") {
+          style = set("#0f1117", "#e6efff", "rgba(220,235,255,0.95)", "#eaf2ff");
+        }
+        if (form === "Silver Ultra Instinct") {
+          style = set("#1a1f2b", "#c0c5d8", "rgba(200,210,230,0.95)", "#dde4f4");
+        }
+      }
+
+      // Small per-character tweaks (optional polish)
+      // Example: Vegeta's SSJ forms slightly cooler tone
+      if (saiyan === "Vegeta" && form.startsWith("Super Saiyan")) {
+        style.accent = "#b0e0ff";
+      }
+
+      return style;
+    }
+
+    // ===== UI Elements =====
+    const saiyanSelect = document.getElementById("saiyanSelect");
+    const formSelect   = document.getElementById("formSelect");
+    const card         = document.getElementById("saiyanCard");
+    const saiyanBadge  = document.getElementById("saiyanBadge");
+    const formBadge    = document.getElementById("formBadge");
+    const titleText    = document.getElementById("titleText");
+    const formText     = document.getElementById("formText");
+
+    // ===== Populate form options based on current Saiyan =====
+    function populateForms() {
+      const saiyan = saiyanSelect.value;
+      const forms = FORMS[saiyan] || [];
+      formSelect.innerHTML = "";
+      for (const f of forms) {
+        const opt = document.createElement("option");
+        opt.value = f;
+        opt.textContent = f;
+        formSelect.appendChild(opt);
+      }
+    }
+
+    // ===== Apply selected style to the card (updates CSS variables) =====
+    function applyStyle() {
+      const saiyan = saiyanSelect.value;
+      const form   = formSelect.value;
+
+      const { bg1, bg2, glow, accent } = getStyle(saiyan, form);
+
+      // Update CSS variables on :root for instant theming
+      document.documentElement.style.setProperty("--bg1", bg1);
+      document.documentElement.style.setProperty("--bg2", bg2);
+      document.documentElement.style.setProperty("--glow", glow);
+      document.documentElement.style.setProperty("--accent", accent);
+
+      // Update labels
+      saiyanBadge.textContent = saiyan;
+      formBadge.textContent = form;
+      titleText.textContent = saiyan;
+      formText.textContent = form;
+
+      // Accessibility live region update
+      card.setAttribute("aria-label", `${saiyan} - ${form} aura display`);
+    }
+
+    // ===== Event bindings =====
+    saiyanSelect.addEventListener("change", () => {
+      populateForms();
+      applyStyle();
+    });
+    formSelect.addEventListener("change", applyStyle);
+
+    // ===== Initialize (default: Goku - Base Form) =====
+    (function init() {
+      // Ensure saiyan list is present even if HTML fallback is changed
+      const wanted = ["Goku","Vegeta","Broly","Gohan"];
+      if (saiyanSelect.options.length !== wanted.length) {
+        saiyanSelect.innerHTML = wanted.map(n => `<option>${n}</option>`).join("");
+      }
+      populateForms();
+      // Default to first form (Base Form)
+      applyStyle();
+    })();
+  </script>
+</body>
+</html>
