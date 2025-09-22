@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Management - Tournament Arena Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        .admin-sidebar {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        }
+        
+        .tournament-card {
+            transition: all 0.3s ease;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .tournament-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .status-live {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .status-upcoming {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+        
+        .status-completed {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            color: white;
+        }
+        
+        .prize-pool {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+        
+        .tournament-actions {
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .tournament-card:hover .tournament-actions {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Admin Sidebar -->
+    <div class="fixed left-0 top-0 h-full w-64 admin-sidebar text-white z-40">
+        <div class="p-6">
+            <div class="flex items-center space-x-3 mb-8">
+                <i class="fas fa-shield-alt text-2xl text-red-400"></i>
+                <div>
+                    <h1 class="text-xl font-bold">Admin Panel</h1>
+                    <p class="text-xs text-gray-400">Tournament Arena</p>
+                </div>
+            </div>
+            
+            <nav class="space-y-2">
+                <a href="adminhome.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-tachometer-alt w-5"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="admin-users.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-users w-5"></i>
+                    <span>User Management</span>
+                </a>
+                <a href="admin-tournaments.html" class="flex items-center space-x-3 p-3 rounded-lg bg-white bg-opacity-10 text-white">
+                    <i class="fas fa-trophy w-5"></i>
+                    <span>Tournaments</span>
+                </a>
+                <a href="admin-transactions.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-credit-card w-5"></i>
+                    <span>Transactions</span>
+                </a>
+                <a href="admin-analytics.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-chart-bar w-5"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="admin-settings.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-cog w-5"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="flex items-center justify-between p-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Tournament Management</h1>
+                    <p class="text-gray-600">Create, manage and monitor all tournaments</p>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button onclick="showCreateTournamentModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors font-semibold">
+                        <i class="fas fa-plus mr-2"></i>Create Tournament
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="p-6">
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Total Tournaments</p>
+                            <p class="text-2xl font-bold text-gray-800">247</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <i class="fas fa-trophy text-blue-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-sm border">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Live Now</p>
+                            <p class="text-2xl font-bold text-green-600">12</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-play-circle text-green-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-sm border">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Total Prize Pool</p>
+                            <p class="text-2xl font-bold text-yellow-600">₹2.4M</p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-full">
+                            <i class="fas fa-coins text-yellow-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-sm border">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Participants Today</p>
+                            <p class="text-2xl font-bold text-purple-600">1,847</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-users text-purple-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border mb-6">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <input type="text" placeholder="Search tournaments..." 
+                                   class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                        
+                        <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">All Games</option>
+                            <option value="free-fire">Free Fire</option>
+                            <option value="pubg">PUBG Mobile</option>
+                            <option value="ludo">Ludo</option>
+                        </select>
+                        
+                        <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">All Statuses</option>
+                            <option value="live">Live</option>
+                            <option value="upcoming">Upcoming</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex items-center space-x-2">
+                        <button class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-filter mr-2"></i>Advanced Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tournament Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6" id="tournaments-grid">
+                <!-- Tournament cards will be populated here -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex items-center justify-center mt-8">
+                <div class="flex items-center space-x-2">
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">Previous</button>
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg">1</button>
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">2</button>
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">3</button>
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">Next</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Tournament Modal -->
+    <div id="create-tournament-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">Create New Tournament</h3>
+                    <button onclick="closeCreateTournamentModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form id="create-tournament-form" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tournament Name</label>
+                            <input type="text" name="name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Game</label>
+                            <select name="game" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Select Game</option>
+                                <option value="free-fire">Free Fire</option>
+                                <option value="pubg">PUBG Mobile</option>
+                                <option value="ludo">Ludo</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Entry Fee (₹)</label>
+                            <input type="number" name="entryFee" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Prize Pool (₹)</label>
+                            <input type="number" name="prizePool" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Max Participants</label>
+                            <input type="number" name="maxParticipants" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tournament Type</label>
+                            <select name="type" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Select Type</option>
+                                <option value="solo">Solo</option>
+                                <option value="duo">Duo</option>
+                                <option value="squad">Squad</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+                            <input type="datetime-local" name="startDate" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Registration Deadline</label>
+                            <input type="datetime-local" name="regDeadline" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                        <textarea name="description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                    
+                    <div class="flex items-center justify-end space-x-4 pt-4">
+                        <button type="button" onclick="closeCreateTournamentModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg">Create Tournament</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Tournament Management System
+        class TournamentManagement {
+            constructor() {
+                this.tournaments = [];
+                this.init();
+            }
+
+            init() {
+                this.loadTournaments();
+                this.renderTournaments();
+                this.setupEventListeners();
+            }
+
+            loadTournaments() {
+                // Sample tournament data
+                this.tournaments = [
+                    {
+                        id: 1,
+                        name: 'Free Fire Championship',
+                        game: 'Free Fire',
+                        status: 'live',
+                        entryFee: 50,
+                        prizePool: 10000,
+                        participants: 64,
+                        maxParticipants: 100,
+                        startDate: '2024-01-20 18:00',
+                        type: 'Squad',
+                        image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400'
+                    },
+                    {
+                        id: 2,
+                        name: 'PUBG Mobile Tournament',
+                        game: 'PUBG Mobile',
+                        status: 'upcoming',
+                        entryFee: 100,
+                        prizePool: 25000,
+                        participants: 32,
+                        maxParticipants: 80,
+                        startDate: '2024-01-22 20:00',
+                        type: 'Duo',
+                        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400'
+                    },
+                    {
+                        id: 3,
+                        name: 'Ludo King Battle',
+                        game: 'Ludo',
+                        status: 'completed',
+                        entryFee: 25,
+                        prizePool: 5000,
+                        participants: 50,
+                        maxParticipants: 50,
+                        startDate: '2024-01-18 16:00',
+                        type: 'Solo',
+                        image: 'https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?w=400'
+                    }
+                ];
+            }
+
+            setupEventListeners() {
+                document.getElementById('create-tournament-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.createTournament(e);
+                });
+            }
+
+            renderTournaments() {
+                const grid = document.getElementById('tournaments-grid');
+                
+                grid.innerHTML = this.tournaments.map(tournament => `
+                    <div class="tournament-card bg-white shadow-sm border hover:shadow-lg">
+                        <div class="relative">
+                            <img src="${tournament.image}" alt="${tournament.name}" class="w-full h-48 object-cover">
+                            <div class="absolute top-4 left-4">
+                                <span class="status-${tournament.status} px-3 py-1 rounded-full text-sm font-semibold">
+                                    ${tournament.status.toUpperCase()}
+                                </span>
+                            </div>
+                            <div class="tournament-actions absolute top-4 right-4">
+                                <button onclick="editTournament(${tournament.id})" class="bg-white bg-opacity-90 p-2 rounded-full text-blue-600 hover:bg-opacity-100 mr-2">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="deleteTournament(${tournament.id})" class="bg-white bg-opacity-90 p-2 rounded-full text-red-600 hover:bg-opacity-100">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-lg font-semibold text-gray-800">${tournament.name}</h3>
+                                <span class="text-sm text-gray-500">${tournament.game}</span>
+                            </div>
+                            
+                            <div class="space-y-2 mb-4">
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-gray-600">Prize Pool:</span>
+                                    <span class="prize-pool text-lg">₹${tournament.prizePool.toLocaleString()}</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-gray-600">Entry Fee:</span>
+                                    <span class="font-semibold">₹${tournament.entryFee}</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-gray-600">Participants:</span>
+                                    <span class="font-semibold">${tournament.participants}/${tournament.maxParticipants}</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-gray-600">Type:</span>
+                                    <span class="font-semibold">${tournament.type}</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-gray-600">Start Time:</span>
+                                    <span class="font-semibold">${tournament.startDate}</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between text-xs text-gray-600 mb-1">
+                                    <span>Registration Progress</span>
+                                    <span>${Math.round((tournament.participants / tournament.maxParticipants) * 100)}%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: ${(tournament.participants / tournament.maxParticipants) * 100}%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-2">
+                                <button onclick="viewTournamentDetails(${tournament.id})" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">
+                                    View Details
+                                </button>
+                                <button onclick="manageTournament(${tournament.id})" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            createTournament(event) {
+                const formData = new FormData(event.target);
+                const tournament = {
+                    id: Date.now(),
+                    name: formData.get('name'),
+                    game: formData.get('game'),
+                    status: 'upcoming',
+                    entryFee: parseInt(formData.get('entryFee')),
+                    prizePool: parseInt(formData.get('prizePool')),
+                    participants: 0,
+                    maxParticipants: parseInt(formData.get('maxParticipants')),
+                    startDate: formData.get('startDate'),
+                    type: formData.get('type'),
+                    description: formData.get('description'),
+                    image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400'
+                };
+
+                this.tournaments.unshift(tournament);
+                this.renderTournaments();
+                this.closeCreateTournamentModal();
+                
+                // Show success notification
+                if (window.TournamentAnalytics) {
+                    window.TournamentAnalytics.showNotification(
+                        `Tournament "${tournament.name}" created successfully!`, 
+                        'success'
+                    );
+                }
+            }
+
+            closeCreateTournamentModal() {
+                document.getElementById('create-tournament-modal').classList.add('hidden');
+            }
+        }
+
+        // Initialize Tournament Management
+        const tournamentManagement = new TournamentManagement();
+
+        // Tournament action functions
+        function showCreateTournamentModal() {
+            document.getElementById('create-tournament-modal').classList.remove('hidden');
+        }
+
+        function closeCreateTournamentModal() {
+            tournamentManagement.closeCreateTournamentModal();
+        }
+
+        function viewTournamentDetails(tournamentId) {
+            console.log('View tournament details:', tournamentId);
+            window.location.href = `tournament-details.html?id=${tournamentId}`;
+        }
+
+        function editTournament(tournamentId) {
+            console.log('Edit tournament:', tournamentId);
+        }
+
+        function deleteTournament(tournamentId) {
+            if (confirm('Are you sure you want to delete this tournament?')) {
+                const index = tournamentManagement.tournaments.findIndex(t => t.id === tournamentId);
+                if (index !== -1) {
+                    tournamentManagement.tournaments.splice(index, 1);
+                    tournamentManagement.renderTournaments();
+                }
+            }
+        }
+
+        function manageTournament(tournamentId) {
+            console.log('Manage tournament:', tournamentId);
+        }
+    </script>
+</body>
+</html>

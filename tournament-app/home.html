@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Tournament Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .sidebar {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-gradient-to-br from-indigo-600 to-purple-700 flex items-center justify-center z-50">
+        <div class="text-center text-white">
+            <div class="animate-spin rounded-full h-16 w-16 border-4 border-white border-t-transparent mx-auto mb-4"></div>
+            <h2 class="text-xl font-semibold">Loading Dashboard...</h2>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 h-full w-64 sidebar text-white transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40" id="sidebar">
+        <div class="p-6">
+            <div class="flex items-center space-x-3 mb-8">
+                <i class="fas fa-trophy text-2xl text-yellow-400"></i>
+                <h1 class="text-xl font-bold">Tournament Arena</h1>
+            </div>
+            
+            <nav class="space-y-2">
+                <a href="home.html" class="flex items-center space-x-3 p-3 rounded-lg bg-white bg-opacity-20 text-white">
+                    <i class="fas fa-home w-5"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="matchlist.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-gamepad w-5"></i>
+                    <span>Matches</span>
+                </a>
+                <a href="wallet.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-wallet w-5"></i>
+                    <span>Wallet</span>
+                </a>
+                <a href="profile.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-user w-5"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="top.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-crown w-5"></i>
+                    <span>Leaderboard</span>
+                </a>
+                <button onclick="handleLogout()" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-red-600 transition-colors w-full text-left">
+                    <i class="fas fa-sign-out-alt w-5"></i>
+                    <span>Logout</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="md:ml-64 min-h-screen">
+        <!-- Top Navigation -->
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="flex items-center justify-between p-4">
+                <button class="md:hidden text-gray-600" onclick="toggleSidebar()">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                
+                <div class="flex items-center space-x-4">
+                    <!-- Notifications -->
+                    <div class="relative">
+                        <button class="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors" onclick="toggleNotifications()">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                        </button>
+                        
+                        <!-- Notifications Dropdown -->
+                        <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                            <div class="p-4 border-b border-gray-200">
+                                <h3 class="font-semibold text-gray-800">Notifications</h3>
+                            </div>
+                            <div class="max-h-64 overflow-y-auto">
+                                <div class="p-4 border-b border-gray-100 hover:bg-gray-50">
+                                    <div class="flex items-start space-x-3">
+                                        <div class="bg-green-100 p-2 rounded-full">
+                                            <i class="fas fa-trophy text-green-600"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-medium text-gray-800">You won ₹500!</p>
+                                            <p class="text-xs text-gray-500">Free Fire Solo Championship</p>
+                                            <p class="text-xs text-gray-400">2 hours ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4 border-b border-gray-100 hover:bg-gray-50">
+                                    <div class="flex items-start space-x-3">
+                                        <div class="bg-blue-100 p-2 rounded-full">
+                                            <i class="fas fa-gamepad text-blue-600"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-medium text-gray-800">New tournament starting</p>
+                                            <p class="text-xs text-gray-500">PUBG Squad Battle in 30 minutes</p>
+                                            <p class="text-xs text-gray-400">5 hours ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4 hover:bg-gray-50">
+                                    <div class="flex items-start space-x-3">
+                                        <div class="bg-yellow-100 p-2 rounded-full">
+                                            <i class="fas fa-coins text-yellow-600"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-medium text-gray-800">Deposit successful</p>
+                                            <p class="text-xs text-gray-500">₹1000 added to your wallet</p>
+                                            <p class="text-xs text-gray-400">1 day ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-3 border-t border-gray-200 text-center">
+                                <button class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">View all notifications</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <!-- User Profile -->
+                    <div class="flex items-center space-x-3">
+                        <img id="user-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-full border-2 border-indigo-200">
+                        <div class="hidden sm:block">
+                            <p class="font-semibold text-gray-800" id="user-name">Loading...</p>
+                            <p class="text-sm text-gray-500" id="user-email">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="p-6">
+            <!-- Welcome Section -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Welcome back, <span id="welcome-name">Player</span>!</h1>
+                <p class="text-gray-600">Ready to dominate today's tournaments?</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card text-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-white text-opacity-80 text-sm">Balance</p>
+                            <p class="text-2xl font-bold" id="user-balance">₹0</p>
+                        </div>
+                        <div class="bg-white bg-opacity-20 p-3 rounded-full">
+                            <i class="fas fa-wallet text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-green-500 to-emerald-600 text-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-white text-opacity-80 text-sm">Total Played</p>
+                            <p class="text-2xl font-bold" id="user-played">0</p>
+                        </div>
+                        <div class="bg-white bg-opacity-20 p-3 rounded-full">
+                            <i class="fas fa-gamepad text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-yellow-500 to-orange-600 text-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-white text-opacity-80 text-sm">Total Kills</p>
+                            <p class="text-2xl font-bold" id="user-kills">0</p>
+                        </div>
+                        <div class="bg-white bg-opacity-20 p-3 rounded-full">
+                            <i class="fas fa-crosshairs text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-purple-500 to-pink-600 text-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-white text-opacity-80 text-sm">Total Wins</p>
+                            <p class="text-2xl font-bold" id="user-wins">0</p>
+                        </div>
+                        <div class="bg-white bg-opacity-20 p-3 rounded-full">
+                            <i class="fas fa-trophy text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <a href="matchlist.html" class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow group">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-indigo-100 p-3 rounded-full group-hover:bg-indigo-200 transition-colors">
+                            <i class="fas fa-play text-indigo-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Join Tournament</h3>
+                            <p class="text-gray-500 text-sm">Find active matches</p>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="wallet.html" class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow group">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-green-100 p-3 rounded-full group-hover:bg-green-200 transition-colors">
+                            <i class="fas fa-plus text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Add Money</h3>
+                            <p class="text-gray-500 text-sm">Deposit to wallet</p>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="top.html" class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow group">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-yellow-100 p-3 rounded-full group-hover:bg-yellow-200 transition-colors">
+                            <i class="fas fa-crown text-yellow-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Leaderboard</h3>
+                            <p class="text-gray-500 text-sm">Check rankings</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Recent Matches & Upcoming -->
+            <div class="grid lg:grid-cols-2 gap-6">
+                <!-- Recent Matches -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-xl font-semibold text-gray-800">Recent Matches</h2>
+                    </div>
+                    <div class="p-6">
+                        <div id="recent-matches" class="space-y-4">
+                            <!-- Recent matches will be loaded here -->
+                        </div>
+                        <a href="matchlist.html" class="block text-center text-indigo-600 hover:text-indigo-700 font-medium mt-4">
+                            View all matches
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Upcoming Tournaments -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-xl font-semibold text-gray-800">Upcoming Tournaments</h2>
+                    </div>
+                    <div class="p-6">
+                        <div id="upcoming-matches" class="space-y-4">
+                            <!-- Upcoming matches will be loaded here -->
+                        </div>
+                        <a href="matchlist.html" class="block text-center text-indigo-600 hover:text-indigo-700 font-medium mt-4">
+                            Browse all tournaments
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden" onclick="closeSidebar()"></div>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white p-3 shadow-lg transition-all duration-300 opacity-0 invisible transform translate-y-4 z-50" style="border-radius: 50%;">
+        <i class="fas fa-chevron-up text-lg"></i>
+    </button>
+
+    <script src="app.js"></script>
+    <script>
+        let currentUser = null;
+        let userProfile = null;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Add theme toggle
+            // Initialize theme removed - using light mode only
+            
+            // Check authentication
+            firebase.onAuthStateChanged(async (user) => {
+                if (!user) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                currentUser = user;
+                await loadUserProfile();
+                await loadRecentMatches();
+                await loadUpcomingMatches();
+                
+                // Hide loading screen
+                setTimeout(() => {
+                    document.getElementById('loading-screen').style.display = 'none';
+                }, 1000);
+            });
+
+            // Back to top button functionality
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible', 'translate-y-4');
+                    backToTopButton.classList.add('opacity-100', 'visible', 'translate-y-0');
+                } else {
+                    backToTopButton.classList.add('opacity-0', 'invisible', 'translate-y-4');
+                    backToTopButton.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        async function loadUserProfile() {
+            try {
+                userProfile = await firebase.getUserProfile(currentUser.uid);
+                
+                if (!userProfile) {
+                    // Create default profile if doesn't exist
+                    userProfile = {
+                        email: currentUser.email,
+                        displayName: currentUser.displayName || currentUser.email.split('@')[0],
+                        photoURL: currentUser.photoURL,
+                        balance: 1000, // Starting balance
+                        winningBalance: 0,
+                        totalPlayed: 15,
+                        totalKills: 47,
+                        totalWins: 8,
+                        referrals: 3,
+                        createdAt: new Date().toISOString()
+                    };
+                    await firebase.createUserProfile(currentUser.uid, userProfile);
+                }
+
+                // Update UI with user data
+                document.getElementById('user-name').textContent = userProfile.displayName;
+                document.getElementById('user-email').textContent = userProfile.email;
+                document.getElementById('welcome-name').textContent = userProfile.displayName;
+                document.getElementById('user-avatar').src = userProfile.photoURL || Utils.generateAvatar(userProfile.displayName);
+                
+                // Update stats
+                document.getElementById('user-balance').textContent = Utils.formatCurrency(userProfile.balance);
+                document.getElementById('user-played').textContent = userProfile.totalPlayed || 0;
+                document.getElementById('user-kills').textContent = userProfile.totalKills || 0;
+                document.getElementById('user-wins').textContent = userProfile.totalWins || 0;
+                
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+                Utils.showToast('Error loading profile data', 'error');
+            }
+        }
+
+        async function loadRecentMatches() {
+            try {
+                const matches = await firebase.getMatches();
+                const recentMatches = matches.filter(match => match.status === 'finished').slice(0, 3);
+                
+                const container = document.getElementById('recent-matches');
+                
+                if (recentMatches.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500 text-center">No recent matches</p>';
+                    return;
+                }
+                
+                container.innerHTML = recentMatches.map(match => `
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-${getGameIcon(match.game)} text-indigo-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">${match.title}</p>
+                                <p class="text-sm text-gray-500">${Utils.formatDate(match.startTime)}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                                Won ₹${Math.floor(Math.random() * 500 + 100)}
+                            </span>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading recent matches:', error);
+            }
+        }
+
+        async function loadUpcomingMatches() {
+            try {
+                const matches = await firebase.getMatches();
+                const upcomingMatches = matches.filter(match => match.status === 'upcoming').slice(0, 3);
+                
+                const container = document.getElementById('upcoming-matches');
+                
+                if (upcomingMatches.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500 text-center">No upcoming matches</p>';
+                    return;
+                }
+                
+                container.innerHTML = upcomingMatches.map(match => `
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-${getGameIcon(match.game)} text-indigo-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">${match.title}</p>
+                                <p class="text-sm text-gray-500">Entry: ${Utils.formatCurrency(match.entryFee)}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-medium text-gray-800">Prize: ${Utils.formatCurrency(match.prizePool)}</p>
+                            <p class="text-xs text-gray-500">${match.currentPlayers}/${match.maxPlayers} players</p>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading upcoming matches:', error);
+            }
+        }
+
+        function getGameIcon(game) {
+            switch (game) {
+                case 'freefire': return 'fire';
+                case 'pubg': return 'crosshairs';
+                case 'ludo': return 'dice';
+                default: return 'gamepad';
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notifications-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        async function handleLogout() {
+            try {
+                await firebase.signOut();
+                Utils.showToast('Logged out successfully', 'success');
+                window.location.href = 'index.html';
+            } catch (error) {
+                Utils.showToast('Error logging out', 'error');
+            }
+        }
+
+        // Close notifications when clicking outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('notifications-dropdown');
+            const button = e.target.closest('.fa-bell')?.parentElement;
+            
+            if (!dropdown.contains(e.target) && !button) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Close sidebar on window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                closeSidebar();
+            }
+        });
+    </script>
+</body>
+</html>

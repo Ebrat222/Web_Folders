@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Maintenance - Tournament Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .animate-bounce-slow {
+            animation: bounce 3s infinite;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .maintenance-icon {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center font-inter">
+    <div class="container mx-auto px-6">
+        <div class="max-w-2xl mx-auto text-center">
+            <!-- Maintenance Icon -->
+            <div class="mb-8">
+                <div class="maintenance-icon w-32 h-32 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-tools text-6xl text-white"></i>
+                </div>
+                <div class="animate-bounce-slow">
+                    <i class="fas fa-exclamation-triangle text-yellow-300 text-4xl"></i>
+                </div>
+            </div>
+
+            <!-- Maintenance Content -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 mb-8 border border-white border-opacity-20">
+                <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">
+                    Server Under Maintenance
+                </h1>
+                <p class="text-xl text-white text-opacity-90 mb-8 leading-relaxed">
+                    We're currently performing scheduled maintenance to improve your gaming experience. 
+                    Our tournaments will be back online shortly!
+                </p>
+
+                <!-- Estimated Time -->
+                <div class="bg-white bg-opacity-10 rounded-xl p-6 mb-8">
+                    <h2 class="text-2xl font-semibold text-white mb-4">
+                        <i class="fas fa-clock mr-2"></i>
+                        Estimated Downtime
+                    </h2>
+                    <div id="countdown" class="text-3xl font-bold text-yellow-300">
+                        02:30:45
+                    </div>
+                    <p class="text-white text-opacity-80 mt-2">Hours : Minutes : Seconds</p>
+                </div>
+
+                <!-- What We're Working On -->
+                <div class="text-left bg-white bg-opacity-10 rounded-xl p-6 mb-8">
+                    <h3 class="text-xl font-semibold text-white mb-4">
+                        <i class="fas fa-cog mr-2"></i>
+                        What We're Working On
+                    </h3>
+                    <ul class="space-y-3 text-white text-opacity-90">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-300 mr-3 mt-1"></i>
+                            <span>Server performance optimization</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-300 mr-3 mt-1"></i>
+                            <span>Database improvements</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-spinner fa-spin text-yellow-300 mr-3 mt-1"></i>
+                            <span>New tournament features</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-clock text-gray-300 mr-3 mt-1"></i>
+                            <span>Security enhancements</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-clock text-gray-300 mr-3 mt-1"></i>
+                            <span>Bug fixes and optimizations</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Social Links -->
+                <div class="text-center">
+                    <h3 class="text-xl font-semibold text-white mb-4">Stay Connected</h3>
+                    <div class="flex justify-center space-x-6">
+                        <a href="#" class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+                            <i class="fab fa-facebook-f text-white"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-blue-400 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors">
+                            <i class="fab fa-twitter text-white"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-pink-600 rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors">
+                            <i class="fab fa-instagram text-white"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors">
+                            <i class="fab fa-whatsapp text-white"></i>
+                        </a>
+                    </div>
+                    <p class="text-white text-opacity-80 mt-4">
+                        Follow us for real-time updates on the maintenance progress
+                    </p>
+                </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 border border-white border-opacity-20">
+                <h3 class="text-lg font-semibold text-white mb-4">Need Immediate Help?</h3>
+                <div class="grid md:grid-cols-2 gap-4 text-white text-opacity-90">
+                    <div class="flex items-center justify-center">
+                        <i class="fas fa-envelope mr-2"></i>
+                        <span>support@tournamentarena.com</span>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <i class="fas fa-phone mr-2"></i>
+                        <span>+880 1XXX-XXXXXX</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Auto Refresh Notice -->
+            <div class="mt-8 text-center">
+                <p class="text-white text-opacity-70">
+                    <i class="fas fa-sync-alt mr-2"></i>
+                    This page will automatically refresh every 5 minutes
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Animation -->
+    <div class="fixed inset-0 pointer-events-none">
+        <div class="absolute top-10 left-10 w-20 h-20 bg-white bg-opacity-10 rounded-full animate-bounce" style="animation-delay: 0s;"></div>
+        <div class="absolute top-20 right-20 w-16 h-16 bg-white bg-opacity-10 rounded-full animate-bounce" style="animation-delay: 1s;"></div>
+        <div class="absolute bottom-20 left-20 w-24 h-24 bg-white bg-opacity-10 rounded-full animate-bounce" style="animation-delay: 2s;"></div>
+        <div class="absolute bottom-10 right-10 w-18 h-18 bg-white bg-opacity-10 rounded-full animate-bounce" style="animation-delay: 3s;"></div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-purple-600 hover:bg-purple-700 text-white p-3 shadow-lg transition-all duration-300 opacity-0 invisible transform translate-y-4 z-50" style="border-radius: 50%;">
+        <i class="fas fa-chevron-up text-lg"></i>
+    </button>
+
+    <script>
+        // Countdown timer
+        function updateCountdown() {
+            // Set maintenance end time (2.5 hours from now for demo)
+            const endTime = new Date().getTime() + (2.5 * 60 * 60 * 1000);
+            
+            function countdown() {
+                const now = new Date().getTime();
+                const timeLeft = endTime - now;
+                
+                if (timeLeft > 0) {
+                    const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                    
+                    document.getElementById('countdown').textContent = 
+                        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                } else {
+                    // Maintenance over, redirect to home
+                    document.getElementById('countdown').textContent = '00:00:00';
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                }
+            }
+            
+            countdown();
+            setInterval(countdown, 1000);
+        }
+
+        // Auto-refresh page every 5 minutes
+        function autoRefresh() {
+            setTimeout(() => {
+                window.location.reload();
+            }, 5 * 60 * 1000); // 5 minutes
+        }
+
+        // Progress animation for maintenance tasks
+        function animateProgress() {
+            const progressItems = document.querySelectorAll('.fas.fa-clock');
+            let index = 0;
+            
+            setInterval(() => {
+                if (index < progressItems.length) {
+                    const item = progressItems[index];
+                    item.className = 'fas fa-spinner fa-spin text-yellow-300 mr-3 mt-1';
+                    
+                    setTimeout(() => {
+                        item.className = 'fas fa-check text-green-300 mr-3 mt-1';
+                    }, 3000);
+                    
+                    index++;
+                }
+            }, 10000); // Update every 10 seconds
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCountdown();
+            autoRefresh();
+            animateProgress();
+
+            // Back to top button functionality
+            const backToTopButton = document.getElementById('back-to-top');
+            if (backToTopButton) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 300) {
+                        backToTopButton.classList.remove('opacity-0', 'invisible', 'translate-y-4');
+                        backToTopButton.classList.add('opacity-100', 'visible', 'translate-y-0');
+                    } else {
+                        backToTopButton.classList.add('opacity-0', 'invisible', 'translate-y-4');
+                        backToTopButton.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                    }
+                });
+                
+                backToTopButton.addEventListener('click', () => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+        });
+
+        // Prevent back navigation during maintenance
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function(event) {
+            window.history.pushState(null, null, window.location.href);
+        };
+    </script>
+</body>
+</html>

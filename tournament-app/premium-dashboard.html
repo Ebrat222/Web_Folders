@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Dashboard - Tournament Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .widget-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .widget-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .widget-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .widget-card:hover::before {
+            left: 100%;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .real-time-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .tournament-bracket-container {
+            min-height: 600px;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1rem;
+        }
+        
+        .analytics-dashboard {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 2rem;
+        }
+        
+        .chat-widget {
+            position: relative;
+            height: 400px;
+        }
+        
+        .premium-badge {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .feature-highlight {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-trophy text-2xl text-indigo-600"></i>
+                    <h1 class="text-xl font-bold text-gray-800">Tournament Arena Premium</h1>
+                    <span class="premium-badge">Premium</span>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="real-time-indicator"></div>
+                    <span class="text-sm text-gray-600">Real-time Analytics Active</span>
+                    <button onclick="window.location.href='index.html'" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        Back to Home
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Dashboard -->
+    <div class="container mx-auto px-6 py-8">
+        <!-- Welcome Section -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">Premium Dashboard</h2>
+            <p class="text-gray-600">Experience the best Tournament Arena has to offer with advanced analytics, real-time chat, and premium features.</p>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="dashboard-grid mb-8">
+            <div class="widget-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-gray-800">Total Players</h3>
+                    <i class="fas fa-users text-indigo-600"></i>
+                </div>
+                <div id="total-players" class="metric-value">0</div>
+                <div class="text-sm text-gray-600">+12% from last week</div>
+            </div>
+            
+            <div class="widget-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-gray-800">Active Tournaments</h3>
+                    <i class="fas fa-trophy text-green-600"></i>
+                </div>
+                <div id="active-tournaments" class="metric-value">0</div>
+                <div class="text-sm text-gray-600">Live competitions</div>
+            </div>
+            
+            <div class="widget-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-gray-800">Online Players</h3>
+                    <i class="fas fa-circle text-green-500"></i>
+                </div>
+                <div id="online-players" class="metric-value">0</div>
+                <div class="text-sm text-gray-600">Currently active</div>
+            </div>
+            
+            <div class="widget-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-gray-800">Completed Matches</h3>
+                    <i class="fas fa-check-circle text-blue-600"></i>
+                </div>
+                <div id="completed-matches" class="metric-value">0</div>
+                <div class="text-sm text-gray-600">Today's matches</div>
+            </div>
+        </div>
+
+        <!-- Feature Showcase Grid -->
+        <div class="grid lg:grid-cols-2 gap-8 mb-8">
+            <!-- Real-time Chat System -->
+            <div class="widget-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-comments text-blue-600 mr-2"></i>
+                        Real-time Chat System
+                    </h3>
+                    <span class="premium-badge">Premium</span>
+                </div>
+                <div class="feature-highlight">
+                    <h4 class="font-medium text-gray-800 mb-2">Advanced Chat Features</h4>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Real-time messaging with emoji support</li>
+                        <li>• Voice chat integration</li>
+                        <li>• Tournament-specific chat rooms</li>
+                        <li>• Advanced notification system</li>
+                    </ul>
+                </div>
+                <div class="chat-widget bg-gray-50 rounded-lg p-4">
+                    <div class="text-center text-gray-500">
+                        <i class="fas fa-comments text-3xl mb-2"></i>
+                        <p>Chat system integrated and ready!</p>
+                        <button onclick="if(window.ChatSystem) window.ChatSystem.toggleChat()" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">
+                            Open Chat
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Analytics -->
+            <div class="widget-card analytics-dashboard">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold flex items-center">
+                        <i class="fas fa-chart-line mr-2"></i>
+                        Advanced Analytics
+                    </h3>
+                    <span class="bg-white bg-opacity-20 text-white px-2 py-1 rounded-full text-xs">Live</span>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-white bg-opacity-10 rounded-lg p-4">
+                        <h4 class="font-medium mb-2">Real-time Metrics</h4>
+                        <ul class="text-sm space-y-1 opacity-90">
+                            <li>• User behavior tracking</li>
+                            <li>• Performance monitoring</li>
+                            <li>• Tournament progression analytics</li>
+                            <li>• Revenue insights</li>
+                        </ul>
+                    </div>
+                    <button onclick="if(window.TournamentAnalytics) window.TournamentAnalytics.exportAnalytics()" class="w-full bg-white bg-opacity-20 hover:bg-opacity-30 text-white py-2 px-4 rounded-lg transition-colors">
+                        Export Analytics Data
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tournament Bracket System -->
+        <div class="widget-card mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="font-semibold text-gray-800 flex items-center">
+                    <i class="fas fa-sitemap text-purple-600 mr-2"></i>
+                    Advanced Tournament Brackets
+                </h3>
+                <span class="premium-badge">Premium</span>
+            </div>
+            
+            <div class="feature-highlight mb-4">
+                <h4 class="font-medium text-gray-800 mb-2">Tournament Management Features</h4>
+                <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-600">
+                    <ul class="space-y-1">
+                        <li>• Interactive bracket visualization</li>
+                        <li>• Real-time match updates</li>
+                        <li>• Automatic bracket generation</li>
+                    </ul>
+                    <ul class="space-y-1">
+                        <li>• Export tournament data</li>
+                        <li>• Advanced statistics tracking</li>
+                        <li>• Multi-format support</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="tournament-bracket-container" class="tournament-bracket-container">
+                <!-- Tournament bracket will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Performance Monitoring -->
+        <div class="dashboard-grid mb-8">
+            <div class="widget-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-gray-800">Memory Usage</h3>
+                    <i class="fas fa-memory text-orange-600"></i>
+                </div>
+                <div class="metric-value text-2xl" id="memory-usage">-- MB</div>
+                <div class="text-sm text-gray-600">JavaScript heap</div>
+            </div>
+            
+            <div class="widget-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-gray-800">Network Status</h3>
+                    <i class="fas fa-wifi text-green-600"></i>
+                </div>
+                <div class="metric-value text-2xl" id="network-status">Good</div>
+                <div class="text-sm text-gray-600">Connection quality</div>
+            </div>
+            
+            <div class="widget-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-gray-800">Page Views</h3>
+                    <i class="fas fa-eye text-blue-600"></i>
+                </div>
+                <div class="metric-value text-2xl" id="page-views">0</div>
+                <div class="text-sm text-gray-600">Session views</div>
+            </div>
+            
+            <div class="widget-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-gray-800">Interactions</h3>
+                    <i class="fas fa-mouse-pointer text-purple-600"></i>
+                </div>
+                <div class="metric-value text-2xl" id="user-interactions">0</div>
+                <div class="text-sm text-gray-600">User actions</div>
+            </div>
+        </div>
+
+        <!-- Premium Features Summary -->
+        <div class="widget-card">
+            <h3 class="font-semibold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-star text-yellow-500 mr-2"></i>
+                Premium Features Active
+            </h3>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="feature-highlight">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-shield-alt text-green-600 mr-2"></i>
+                        <h4 class="font-medium">Enhanced Security</h4>
+                    </div>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• CSRF Protection Active</li>
+                        <li>• Input Sanitization</li>
+                        <li>• Rate Limiting</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-highlight">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-rocket text-blue-600 mr-2"></i>
+                        <h4 class="font-medium">Performance Optimized</h4>
+                    </div>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Service Worker Active</li>
+                        <li>• Resource Preloading</li>
+                        <li>• Image Optimization</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-highlight">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-mobile-alt text-purple-600 mr-2"></i>
+                        <h4 class="font-medium">PWA Ready</h4>
+                    </div>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Offline Support</li>
+                        <li>• App Installation</li>
+                        <li>• Push Notifications</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Scripts -->
+    <script src="app.js"></script>
+    <script src="analytics.js"></script>
+    <script src="chat.js"></script>
+    <script src="bracket.js"></script>
+
+    <script>
+        // Dashboard Controller
+        class PremiumDashboard {
+            constructor() {
+                this.updateInterval = null;
+                this.init();
+            }
+
+            init() {
+                this.setupDashboard();
+                this.startRealTimeUpdates();
+                this.loadInitialData();
+            }
+
+            setupDashboard() {
+                // Initialize all premium features
+                console.log('🚀 Initializing Premium Dashboard...');
+                
+                // Show welcome notification
+                setTimeout(() => {
+                    if (window.TournamentAnalytics) {
+                        window.TournamentAnalytics.showNotification(
+                            '🎯 Premium Dashboard Loaded! All systems operational.', 
+                            'success', 
+                            4000
+                        );
+                    }
+                }, 1000);
+            }
+
+            loadInitialData() {
+                // Simulate loading tournament data
+                this.updateMetrics({
+                    totalPlayers: 50234,
+                    activeTournaments: 12,
+                    onlinePlayers: 1847,
+                    completedMatches: 423
+                });
+
+                // Update performance metrics
+                this.updatePerformanceMetrics();
+                
+                // Load page view data
+                this.updateUserMetrics();
+            }
+
+            updateMetrics(data) {
+                this.animateCounter('total-players', data.totalPlayers);
+                this.animateCounter('active-tournaments', data.activeTournaments);
+                this.animateCounter('online-players', data.onlinePlayers);
+                this.animateCounter('completed-matches', data.completedMatches);
+            }
+
+            animateCounter(elementId, targetValue) {
+                const element = document.getElementById(elementId);
+                if (!element) return;
+
+                const duration = 2000;
+                const startValue = 0;
+                const startTime = performance.now();
+
+                const animate = (currentTime) => {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const easeProgress = 1 - Math.pow(1 - progress, 3);
+                    
+                    const current = Math.floor(startValue + (targetValue - startValue) * easeProgress);
+                    element.textContent = current.toLocaleString();
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    }
+                };
+
+                requestAnimationFrame(animate);
+            }
+
+            updatePerformanceMetrics() {
+                // Memory usage
+                if (performance.memory) {
+                    const memoryUsage = Math.round(performance.memory.usedJSHeapSize / 1048576);
+                    document.getElementById('memory-usage').textContent = memoryUsage + ' MB';
+                }
+
+                // Network status
+                if (navigator.connection) {
+                    const connection = navigator.connection;
+                    let status = 'Good';
+                    if (connection.effectiveType === '4g') status = 'Excellent';
+                    else if (connection.effectiveType === '3g') status = 'Good';
+                    else if (connection.effectiveType === '2g') status = 'Slow';
+                    
+                    document.getElementById('network-status').textContent = status;
+                }
+            }
+
+            updateUserMetrics() {
+                // Page views
+                const pageViews = JSON.parse(localStorage.getItem('pageViews') || '[]');
+                document.getElementById('page-views').textContent = pageViews.length;
+
+                // User interactions
+                const interactions = JSON.parse(localStorage.getItem('userInteractions') || '[]');
+                document.getElementById('user-interactions').textContent = interactions.length;
+            }
+
+            startRealTimeUpdates() {
+                this.updateInterval = setInterval(() => {
+                    // Simulate real-time data updates
+                    const randomVariation = () => Math.floor(Math.random() * 10) - 5;
+                    
+                    this.updateMetrics({
+                        totalPlayers: 50234 + randomVariation(),
+                        activeTournaments: 12 + Math.max(0, randomVariation()),
+                        onlinePlayers: 1847 + randomVariation() * 10,
+                        completedMatches: 423 + Math.max(0, randomVariation())
+                    });
+
+                    this.updatePerformanceMetrics();
+                    this.updateUserMetrics();
+                }, 5000);
+            }
+
+            destroy() {
+                if (this.updateInterval) {
+                    clearInterval(this.updateInterval);
+                }
+            }
+        }
+
+        // Initialize Dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            window.PremiumDashboard = new PremiumDashboard();
+            
+            // Add page transition
+            document.body.style.opacity = '0';
+            document.body.style.transform = 'translateY(20px)';
+            document.body.style.transition = 'all 0.5s ease';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+                document.body.style.transform = 'translateY(0)';
+            }, 100);
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (window.PremiumDashboard) {
+                window.PremiumDashboard.destroy();
+            }
+        });
+    </script>
+</body>
+</html>

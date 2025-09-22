@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced User Management - Tournament Arena Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        .admin-sidebar {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        }
+        
+        .data-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .table-row:hover {
+            background: #f8fafc;
+        }
+        
+        .action-button {
+            transition: all 0.2s ease;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-1px);
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .status-active {
+            background: #ecfdf5;
+            color: #065f46;
+        }
+        
+        .status-suspended {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+        
+        .status-pending {
+            background: #fffbeb;
+            color: #92400e;
+        }
+        
+        .premium-filter {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Admin Sidebar -->
+    <div class="fixed left-0 top-0 h-full w-64 admin-sidebar text-white z-40">
+        <div class="p-6">
+            <div class="flex items-center space-x-3 mb-8">
+                <i class="fas fa-shield-alt text-2xl text-red-400"></i>
+                <div>
+                    <h1 class="text-xl font-bold">Admin Panel</h1>
+                    <p class="text-xs text-gray-400">Tournament Arena</p>
+                </div>
+            </div>
+            
+            <nav class="space-y-2">
+                <a href="adminhome.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-tachometer-alt w-5"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="admin-users.html" class="flex items-center space-x-3 p-3 rounded-lg bg-white bg-opacity-10 text-white">
+                    <i class="fas fa-users w-5"></i>
+                    <span>User Management</span>
+                </a>
+                <a href="admin-tournaments.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-trophy w-5"></i>
+                    <span>Tournaments</span>
+                </a>
+                <a href="admin-transactions.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-credit-card w-5"></i>
+                    <span>Transactions</span>
+                </a>
+                <a href="admin-analytics.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-chart-bar w-5"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="admin-settings.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-cog w-5"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="flex items-center justify-between p-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">User Management</h1>
+                    <p class="text-gray-600">Manage and monitor all registered users</p>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button onclick="exportUsers()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-download mr-2"></i>Export CSV
+                    </button>
+                    <button onclick="showAddUserModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Add User
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="p-6">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Total Users</p>
+                            <p class="text-2xl font-bold text-gray-800" id="total-users-count">2,847</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <i class="fas fa-users text-blue-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-sm border">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Active Users</p>
+                            <p class="text-2xl font-bold text-green-600" id="active-users-count">2,634</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-user-check text-green-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-sm border">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Suspended</p>
+                            <p class="text-2xl font-bold text-red-600" id="suspended-users-count">47</p>
+                        </div>
+                        <div class="bg-red-100 p-3 rounded-full">
+                            <i class="fas fa-user-slash text-red-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-sm border">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">New Today</p>
+                            <p class="text-2xl font-bold text-purple-600" id="new-users-count">23</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-user-plus text-purple-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border mb-6">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <input type="text" id="user-search" placeholder="Search users..." 
+                                   class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                        
+                        <select id="status-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="suspended">Suspended</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                        
+                        <select id="role-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">All Roles</option>
+                            <option value="user">User</option>
+                            <option value="premium">Premium</option>
+                            <option value="moderator">Moderator</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex items-center space-x-2">
+                        <button onclick="refreshUserData()" class="premium-filter px-4 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-sync-alt mr-2"></i>Refresh
+                        </button>
+                        <button onclick="showBulkActions()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-tasks mr-2"></i>Bulk Actions
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Table -->
+            <div class="data-table">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 border-b">
+                            <tr>
+                                <th class="text-left p-4 font-semibold text-gray-800">
+                                    <input type="checkbox" id="select-all" class="rounded border-gray-300">
+                                </th>
+                                <th class="text-left p-4 font-semibold text-gray-800">User</th>
+                                <th class="text-left p-4 font-semibold text-gray-800">Email</th>
+                                <th class="text-left p-4 font-semibold text-gray-800">Status</th>
+                                <th class="text-left p-4 font-semibold text-gray-800">Role</th>
+                                <th class="text-left p-4 font-semibold text-gray-800">Join Date</th>
+                                <th class="text-left p-4 font-semibold text-gray-800">Last Active</th>
+                                <th class="text-left p-4 font-semibold text-gray-800">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- User rows will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="flex items-center justify-between p-4 border-t bg-gray-50">
+                    <div class="text-sm text-gray-600">
+                        Showing 1 to 20 of 2,847 users
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-100">Previous</button>
+                        <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm">1</button>
+                        <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-100">2</button>
+                        <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-100">3</button>
+                        <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-100">Next</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- User Details Modal -->
+    <div id="user-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">User Details</h3>
+                    <button onclick="closeUserModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div id="user-details-content">
+                    <!-- User details will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // User Management System
+        class UserManagement {
+            constructor() {
+                this.users = [];
+                this.filteredUsers = [];
+                this.currentPage = 1;
+                this.usersPerPage = 20;
+                this.init();
+            }
+
+            init() {
+                this.loadUsers();
+                this.setupEventListeners();
+                this.renderUsers();
+            }
+
+            loadUsers() {
+                // Sample user data - in real app, this would come from API
+                this.users = [
+                    {
+                        id: 1,
+                        name: 'John Doe',
+                        email: 'john@example.com',
+                        status: 'active',
+                        role: 'user',
+                        joinDate: '2024-01-15',
+                        lastActive: '2024-01-20',
+                        avatar: 'https://ui-avatars.com/api/?name=John+Doe&background=random'
+                    },
+                    {
+                        id: 2,
+                        name: 'Jane Smith',
+                        email: 'jane@example.com',
+                        status: 'active',
+                        role: 'premium',
+                        joinDate: '2024-01-10',
+                        lastActive: '2024-01-19',
+                        avatar: 'https://ui-avatars.com/api/?name=Jane+Smith&background=random'
+                    },
+                    {
+                        id: 3,
+                        name: 'Mike Johnson',
+                        email: 'mike@example.com',
+                        status: 'suspended',
+                        role: 'user',
+                        joinDate: '2024-01-05',
+                        lastActive: '2024-01-18',
+                        avatar: 'https://ui-avatars.com/api/?name=Mike+Johnson&background=random'
+                    }
+                    // Add more sample users as needed
+                ];
+                
+                this.filteredUsers = [...this.users];
+            }
+
+            setupEventListeners() {
+                document.getElementById('user-search').addEventListener('input', (e) => {
+                    this.filterUsers();
+                });
+
+                document.getElementById('status-filter').addEventListener('change', (e) => {
+                    this.filterUsers();
+                });
+
+                document.getElementById('role-filter').addEventListener('change', (e) => {
+                    this.filterUsers();
+                });
+            }
+
+            filterUsers() {
+                const searchTerm = document.getElementById('user-search').value.toLowerCase();
+                const statusFilter = document.getElementById('status-filter').value;
+                const roleFilter = document.getElementById('role-filter').value;
+
+                this.filteredUsers = this.users.filter(user => {
+                    const matchesSearch = user.name.toLowerCase().includes(searchTerm) || 
+                                        user.email.toLowerCase().includes(searchTerm);
+                    const matchesStatus = !statusFilter || user.status === statusFilter;
+                    const matchesRole = !roleFilter || user.role === roleFilter;
+
+                    return matchesSearch && matchesStatus && matchesRole;
+                });
+
+                this.renderUsers();
+            }
+
+            renderUsers() {
+                const tbody = document.getElementById('users-table-body');
+                const startIndex = (this.currentPage - 1) * this.usersPerPage;
+                const endIndex = startIndex + this.usersPerPage;
+                const paginatedUsers = this.filteredUsers.slice(startIndex, endIndex);
+
+                tbody.innerHTML = paginatedUsers.map(user => `
+                    <tr class="table-row border-b">
+                        <td class="p-4">
+                            <input type="checkbox" class="user-checkbox rounded border-gray-300" data-user-id="${user.id}">
+                        </td>
+                        <td class="p-4">
+                            <div class="flex items-center space-x-3">
+                                <img src="${user.avatar}" alt="${user.name}" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <div class="font-medium text-gray-900">${user.name}</div>
+                                    <div class="text-sm text-gray-500">ID: ${user.id}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-4 text-gray-900">${user.email}</td>
+                        <td class="p-4">
+                            <span class="status-badge status-${user.status}">${user.status}</span>
+                        </td>
+                        <td class="p-4">
+                            <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">${user.role}</span>
+                        </td>
+                        <td class="p-4 text-gray-600">${user.joinDate}</td>
+                        <td class="p-4 text-gray-600">${user.lastActive}</td>
+                        <td class="p-4">
+                            <div class="flex items-center space-x-2">
+                                <button onclick="viewUser(${user.id})" class="action-button text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="editUser(${user.id})" class="action-button text-green-600 hover:text-green-800">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="suspendUser(${user.id})" class="action-button text-red-600 hover:text-red-800">
+                                    <i class="fas fa-ban"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // Initialize User Management
+        const userManagement = new UserManagement();
+
+        // User action functions
+        function viewUser(userId) {
+            const user = userManagement.users.find(u => u.id === userId);
+            if (user) {
+                document.getElementById('user-details-content').innerHTML = `
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <img src="${user.avatar}" alt="${user.name}" class="w-24 h-24 rounded-full mx-auto mb-4">
+                            <h4 class="text-lg font-semibold text-center">${user.name}</h4>
+                            <p class="text-gray-600 text-center">${user.email}</p>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Status</label>
+                                <span class="status-badge status-${user.status}">${user.status}</span>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Role</label>
+                                <p class="text-gray-900">${user.role}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Join Date</label>
+                                <p class="text-gray-900">${user.joinDate}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Last Active</label>
+                                <p class="text-gray-900">${user.lastActive}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('user-modal').classList.remove('hidden');
+            }
+        }
+
+        function editUser(userId) {
+            console.log('Edit user:', userId);
+            // Implementation for editing user
+        }
+
+        function suspendUser(userId) {
+            console.log('Suspend user:', userId);
+            // Implementation for suspending user
+        }
+
+        function closeUserModal() {
+            document.getElementById('user-modal').classList.add('hidden');
+        }
+
+        function refreshUserData() {
+            userManagement.loadUsers();
+            userManagement.renderUsers();
+        }
+
+        function exportUsers() {
+            console.log('Exporting users...');
+            // Implementation for exporting users to CSV
+        }
+
+        function showAddUserModal() {
+            console.log('Show add user modal');
+            // Implementation for adding new user
+        }
+
+        function showBulkActions() {
+            console.log('Show bulk actions');
+            // Implementation for bulk actions
+        }
+    </script>
+</body>
+</html>

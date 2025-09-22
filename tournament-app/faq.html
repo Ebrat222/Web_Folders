@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Tournament Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button onclick="goBack()" class="p-2 hover:bg-gray-100 rounded-lg">
+                        <i class="fas fa-arrow-left text-gray-600"></i>
+                    </button>
+                    <h1 class="text-2xl font-bold text-gray-800">Frequently Asked Questions</h1>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- FAQ Content -->
+    <main class="container mx-auto px-6 py-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Search Bar -->
+            <div class="mb-8">
+                <div class="relative">
+                    <input type="text" id="faq-search" placeholder="Search for answers..." 
+                           class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
+                    <i class="fas fa-search absolute left-4 top-4 text-gray-400"></i>
+                </div>
+            </div>
+
+            <!-- FAQ Categories -->
+            <div class="grid md:grid-cols-3 gap-4 mb-8">
+                <button onclick="filterFAQ('all')" class="faq-category active bg-indigo-600 text-white p-4 rounded-lg font-semibold">
+                    All Questions
+                </button>
+                <button onclick="filterFAQ('account')" class="faq-category bg-white text-gray-700 border border-gray-300 p-4 rounded-lg font-semibold hover:bg-gray-50">
+                    Account & Profile
+                </button>
+                <button onclick="filterFAQ('payment')" class="faq-category bg-white text-gray-700 border border-gray-300 p-4 rounded-lg font-semibold hover:bg-gray-50">
+                    Payments & Wallet
+                </button>
+                <button onclick="filterFAQ('tournament')" class="faq-category bg-white text-gray-700 border border-gray-300 p-4 rounded-lg font-semibold hover:bg-gray-50">
+                    Tournaments
+                </button>
+                <button onclick="filterFAQ('technical')" class="faq-category bg-white text-gray-700 border border-gray-300 p-4 rounded-lg font-semibold hover:bg-gray-50">
+                    Technical Issues
+                </button>
+                <button onclick="filterFAQ('rules')" class="faq-category bg-white text-gray-700 border border-gray-300 p-4 rounded-lg font-semibold hover:bg-gray-50">
+                    Rules & Policies
+                </button>
+            </div>
+
+            <!-- FAQ Items -->
+            <div id="faq-container" class="space-y-4">
+                <!-- FAQ items will be loaded here -->
+            </div>
+
+            <!-- Contact Section -->
+            <div class="mt-12 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl p-8 text-center">
+                <h3 class="text-2xl font-bold mb-4">Still have questions?</h3>
+                <p class="text-indigo-100 mb-6">Our support team is here to help you 24/7</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="contact.html" class="bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                        Contact Support
+                    </a>
+                    <a href="https://wa.me/8801XXXXXXX" class="bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors">
+                        <i class="fab fa-whatsapp mr-2"></i>WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white p-3 shadow-lg transition-all duration-300 opacity-0 invisible transform translate-y-4 z-50" style="border-radius: 50%;">
+        <i class="fas fa-chevron-up text-lg"></i>
+    </button>
+
+    <script src="app.js"></script>
+    <script>
+        const faqData = [
+            {
+                category: 'account',
+                question: 'How do I create an account?',
+                answer: 'Click the "Sign Up" button on the homepage, enter your email and password, then verify your email address to complete registration.'
+            },
+            {
+                category: 'account',
+                question: 'I forgot my password, what should I do?',
+                answer: 'Click "Forgot Password" on the login page, enter your email, and follow the reset instructions sent to your email.'
+            },
+            {
+                category: 'payment',
+                question: 'What payment methods do you accept?',
+                answer: 'We accept bKash, Nagad, and Rocket for deposits and withdrawals. All transactions are secure and processed instantly.'
+            },
+            {
+                category: 'payment',
+                question: 'How long does it take to process withdrawals?',
+                answer: 'Withdrawals are typically processed within 24 hours. During peak times, it may take up to 48 hours.'
+            },
+            {
+                category: 'payment',
+                question: 'What is the minimum withdrawal amount?',
+                answer: 'The minimum withdrawal amount is ₹100. This helps us keep transaction costs low for everyone.'
+            },
+            {
+                category: 'tournament',
+                question: 'How do I join a tournament?',
+                answer: 'Browse available tournaments in the Matches section, click on a tournament, review the details, and click "Join Now" if you have sufficient balance.'
+            },
+            {
+                category: 'tournament',
+                question: 'Can I cancel my tournament registration?',
+                answer: 'You can cancel your registration up to 30 minutes before the tournament starts. Your entry fee will be refunded to your wallet.'
+            },
+            {
+                category: 'tournament',
+                question: 'What happens if I disconnect during a match?',
+                answer: 'If you disconnect, you have 5 minutes to reconnect. If you cannot reconnect, you will be disqualified from that match.'
+            },
+            {
+                category: 'technical',
+                question: 'The app is running slowly, what should I do?',
+                answer: 'Try refreshing the page, clearing your browser cache, or using a different browser. Ensure you have a stable internet connection.'
+            },
+            {
+                category: 'technical',
+                question: 'I\'m not receiving email notifications',
+                answer: 'Check your spam folder and add support@tournamentarena.com to your contacts. You can also enable notifications in your profile settings.'
+            },
+            {
+                category: 'rules',
+                question: 'What are the rules for Fair Play?',
+                answer: 'No cheating, hacking, or use of third-party software. Respect other players and follow game-specific rules. Violations result in account suspension.'
+            },
+            {
+                category: 'rules',
+                question: 'How do you prevent cheating?',
+                answer: 'We use advanced anti-cheat detection, manual monitoring, and player reporting systems. Suspicious activities are investigated and penalized.'
+            }
+        ];
+
+        let filteredFAQs = [...faqData];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize theme removed - using light mode only
+            renderFAQs();
+            setupSearch();
+
+            // Back to top button functionality
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible', 'translate-y-4');
+                    backToTopButton.classList.add('opacity-100', 'visible', 'translate-y-0');
+                } else {
+                    backToTopButton.classList.add('opacity-0', 'invisible', 'translate-y-4');
+                    backToTopButton.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        function renderFAQs() {
+            const container = document.getElementById('faq-container');
+            container.innerHTML = filteredFAQs.map((faq, index) => `
+                <div class="faq-item bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden" data-category="${faq.category}">
+                    <button onclick="toggleFAQ(${index})" class="w-full p-6 text-left hover:bg-gray-50 transition-colors">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-semibold text-gray-800 pr-4">${faq.question}</h3>
+                            <i class="fas fa-chevron-down text-gray-400 transform transition-transform duration-200" id="icon-${index}"></i>
+                        </div>
+                    </button>
+                    <div class="faq-answer hidden px-6 pb-6" id="answer-${index}">
+                        <div class="border-t border-gray-200 pt-4">
+                            <p class="text-gray-600">${faq.answer}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleFAQ(index) {
+            const answer = document.getElementById(`answer-${index}`);
+            const icon = document.getElementById(`icon-${index}`);
+            
+            answer.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        function filterFAQ(category) {
+            // Update category buttons
+            document.querySelectorAll('.faq-category').forEach(btn => {
+                btn.classList.remove('active', 'bg-indigo-600', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-300');
+            });
+            event.target.classList.add('active', 'bg-indigo-600', 'text-white');
+            event.target.classList.remove('bg-white', 'text-gray-700', 'border', 'border-gray-300');
+
+            // Filter FAQs
+            if (category === 'all') {
+                filteredFAQs = [...faqData];
+            } else {
+                filteredFAQs = faqData.filter(faq => faq.category === category);
+            }
+            
+            renderFAQs();
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('faq-search');
+            searchInput.addEventListener('input', Utils.debounce((e) => {
+                const query = e.target.value.toLowerCase();
+                
+                if (!query) {
+                    filteredFAQs = [...faqData];
+                } else {
+                    filteredFAQs = faqData.filter(faq => 
+                        faq.question.toLowerCase().includes(query) ||
+                        faq.answer.toLowerCase().includes(query)
+                    );
+                }
+                
+                renderFAQs();
+            }, 300));
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

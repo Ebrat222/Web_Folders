@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - Tournament Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-gray-800 to-gray-900 text-white transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40" id="sidebar">
+        <div class="p-6">
+            <div class="flex items-center space-x-3 mb-8">
+                <i class="fas fa-trophy text-2xl text-yellow-400"></i>
+                <h1 class="text-xl font-bold">Tournament Arena</h1>
+            </div>
+            
+            <nav class="space-y-2">
+                <a href="home.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-home w-5"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="matchlist.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-gamepad w-5"></i>
+                    <span>Matches</span>
+                </a>
+                <a href="wallet.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-wallet w-5"></i>
+                    <span>Wallet</span>
+                </a>
+                <a href="profile.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-user w-5"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="top.html" class="flex items-center space-x-3 p-3 rounded-lg bg-white bg-opacity-20 text-white">
+                    <i class="fas fa-crown w-5"></i>
+                    <span>Leaderboard</span>
+                </a>
+                <button onclick="handleLogout()" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-red-600 transition-colors w-full text-left">
+                    <i class="fas fa-sign-out-alt w-5"></i>
+                    <span>Logout</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="md:ml-64 min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200 p-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="md:hidden text-gray-600" onclick="toggleSidebar()">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h1 class="text-2xl font-bold text-gray-800">Leaderboard</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <img id="user-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-full">
+                    <span id="user-name">Loading...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Filters -->
+        <div class="p-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- Time Filter -->
+                    <div>
+                        <label class="block text-gray-700 text-sm font-semibold mb-2">Time Period</label>
+                        <div class="flex space-x-2">
+                            <button onclick="filterByTime('today')" class="time-filter bg-indigo-600 text-white px-4 py-2 rounded-lg">Today</button>
+                            <button onclick="filterByTime('month')" class="time-filter bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Month</button>
+                            <button onclick="filterByTime('year')" class="time-filter bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Year</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Category Filter -->
+                    <div>
+                        <label class="block text-gray-700 text-sm font-semibold mb-2">Category</label>
+                        <div class="flex space-x-2">
+                            <button onclick="filterByCategory('wins')" class="category-filter bg-indigo-600 text-white px-4 py-2 rounded-lg">Wins</button>
+                            <button onclick="filterByCategory('kills')" class="category-filter bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Kills</button>
+                            <button onclick="filterByCategory('played')" class="category-filter bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Played</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top 3 Podium -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">Top Champions</h2>
+                <div id="podium-container" class="flex justify-center items-end space-x-4">
+                    <!-- Podium will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Full Leaderboard -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                <div class="p-6 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-800">Full Rankings</h2>
+                </div>
+                <div id="leaderboard-container" class="p-6">
+                    <!-- Leaderboard will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden" onclick="closeSidebar()"></div>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white p-3 shadow-lg transition-all duration-300 opacity-0 invisible transform translate-y-4 z-50" style="border-radius: 50%;">
+        <i class="fas fa-chevron-up text-lg"></i>
+    </button>
+
+    <script src="app.js"></script>
+    <script>
+        let currentUser = null;
+        let currentTimeFilter = 'today';
+        let currentCategoryFilter = 'wins';
+        let leaderboardData = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            firebase.onAuthStateChanged(async (user) => {
+                if (!user) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                currentUser = user;
+                await loadUserProfile();
+                await loadLeaderboard();
+            });
+
+            // Back to top button functionality
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible', 'translate-y-4');
+                    backToTopButton.classList.add('opacity-100', 'visible', 'translate-y-0');
+                } else {
+                    backToTopButton.classList.add('opacity-0', 'invisible', 'translate-y-4');
+                    backToTopButton.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        async function loadUserProfile() {
+            const profile = await firebase.getUserProfile(currentUser.uid);
+            if (profile) {
+                document.getElementById('user-name').textContent = profile.displayName;
+                document.getElementById('user-avatar').src = profile.photoURL || Utils.generateAvatar(profile.displayName);
+            }
+        }
+
+        async function loadLeaderboard() {
+            try {
+                leaderboardData = await firebase.getLeaderboard(currentCategoryFilter, currentTimeFilter);
+                
+                // If no data, create sample data
+                if (leaderboardData.length === 0) {
+                    leaderboardData = generateSampleLeaderboard();
+                }
+                
+                renderPodium();
+                renderLeaderboard();
+                
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+                leaderboardData = generateSampleLeaderboard();
+                renderPodium();
+                renderLeaderboard();
+            }
+        }
+
+        function generateSampleLeaderboard() {
+            const sampleNames = ['ProGamer01', 'ChampionX', 'ElitePlayer', 'GameMaster', 'SkillLord', 'VictoryKing', 'BattleHero', 'TopShooter', 'WinnerPro', 'GamingBeast'];
+            
+            return sampleNames.map((name, index) => ({
+                displayName: name,
+                photoURL: Utils.generateAvatar(name),
+                totalWins: Math.floor(Math.random() * 50) + (50 - index * 5),
+                totalKills: Math.floor(Math.random() * 200) + (200 - index * 20),
+                totalPlayed: Math.floor(Math.random() * 100) + (100 - index * 10),
+                winnings: Math.floor(Math.random() * 10000) + (10000 - index * 1000)
+            }));
+        }
+
+        function renderPodium() {
+            const container = document.getElementById('podium-container');
+            const top3 = leaderboardData.slice(0, 3);
+            
+            if (top3.length < 3) {
+                container.innerHTML = '<p class="text-gray-500">Not enough data for podium</p>';
+                return;
+            }
+
+            // Reorder for podium display: 2nd, 1st, 3rd
+            const podiumOrder = [top3[1], top3[0], top3[2]];
+            const heights = ['h-32', 'h-40', 'h-24'];
+            const positions = ['2nd', '1st', '3rd'];
+            const colors = ['bg-gray-400', 'bg-yellow-400', 'bg-orange-400'];
+
+            container.innerHTML = podiumOrder.map((player, index) => `
+                <div class="text-center">
+                    <div class="mb-4">
+                        <img src="${player.photoURL}" alt="${player.displayName}" class="w-16 h-16 rounded-full mx-auto border-4 border-white shadow-lg mb-2">
+                        <p class="font-semibold text-gray-800">${player.displayName}</p>
+                        <p class="text-sm text-gray-600">${getValue(player)} ${getCategoryLabel()}</p>
+                    </div>
+                    <div class="${heights[index]} ${colors[index]} rounded-t-lg flex items-end justify-center pb-4 min-w-24">
+                        <div class="text-white font-bold text-2xl">${positions[index]}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderLeaderboard() {
+            const container = document.getElementById('leaderboard-container');
+            
+            container.innerHTML = leaderboardData.map((player, index) => `
+                <div class="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-shrink-0">
+                            <span class="rank-number ${getRankClass(index + 1)} w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">
+                                ${index + 1}
+                            </span>
+                        </div>
+                        <img src="${player.photoURL}" alt="${player.displayName}" class="w-12 h-12 rounded-full">
+                        <div>
+                            <p class="font-semibold text-gray-800">${player.displayName}</p>
+                            <p class="text-sm text-gray-500">Winnings: ${Utils.formatCurrency(player.winnings || 0)}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-xl text-indigo-600">${getValue(player)}</p>
+                        <p class="text-sm text-gray-500">${getCategoryLabel()}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getRankClass(rank) {
+            if (rank === 1) return 'bg-yellow-400 text-yellow-900';
+            if (rank === 2) return 'bg-gray-400 text-gray-900';
+            if (rank === 3) return 'bg-orange-400 text-orange-900';
+            return 'bg-indigo-600 text-white';
+        }
+
+        function getValue(player) {
+            switch (currentCategoryFilter) {
+                case 'wins': return player.totalWins || 0;
+                case 'kills': return player.totalKills || 0;
+                case 'played': return player.totalPlayed || 0;
+                default: return 0;
+            }
+        }
+
+        function getCategoryLabel() {
+            switch (currentCategoryFilter) {
+                case 'wins': return 'Wins';
+                case 'kills': return 'Kills';
+                case 'played': return 'Matches';
+                default: return '';
+            }
+        }
+
+        function filterByTime(period) {
+            currentTimeFilter = period;
+            updateTimeButtons();
+            loadLeaderboard();
+        }
+
+        function filterByCategory(category) {
+            currentCategoryFilter = category;
+            updateCategoryButtons();
+            loadLeaderboard();
+        }
+
+        function updateTimeButtons() {
+            document.querySelectorAll('.time-filter').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            event.target.classList.add('bg-indigo-600', 'text-white');
+            event.target.classList.remove('bg-gray-200', 'text-gray-700');
+        }
+
+        function updateCategoryButtons() {
+            document.querySelectorAll('.category-filter').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            event.target.classList.add('bg-indigo-600', 'text-white');
+            event.target.classList.remove('bg-gray-200', 'text-gray-700');
+        }
+
+        async function handleLogout() {
+            try {
+                await firebase.signOut();
+                Utils.showToast('Logged out successfully', 'success');
+                window.location.href = 'index.html';
+            } catch (error) {
+                Utils.showToast('Error logging out', 'error');
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

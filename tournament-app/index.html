@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tournament Arena - The ultimate gaming platform for competitive tournaments. Join now and win cash prizes!">
+    <meta name="keywords" content="gaming, tournaments, esports, competitions, prizes, Free Fire, PUBG, Ludo">
+    <meta name="author" content="Tournament Arena">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tournamentarena.com/">
+    <meta property="og:title" content="Tournament Arena - Premier Gaming Platform">
+    <meta property="og:description" content="Join tournaments, win cash prizes, and become a champion in your favorite games.">
+    <meta property="og:image" content="https://tournamentarena.com/og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://tournamentarena.com/">
+    <meta property="twitter:title" content="Tournament Arena - Premier Gaming Platform">
+    <meta property="twitter:description" content="Join tournaments, win cash prizes, and become a champion in your favorite games.">
+    <meta property="twitter:image" content="https://tournamentarena.com/twitter-image.jpg">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Tournament Arena">
+    
+    <title>Tournament Arena - Premier Gaming Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Premium Enhancements */
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8b5cf6 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .animate-float {
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(1deg); }
+            50% { transform: translateY(-10px) rotate(-1deg); }
+            75% { transform: translateY(-20px) rotate(0.5deg); }
+        }
+        
+        .feature-card {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-card:hover::before {
+            left: 100%;
+        }
+        
+        .btn-premium {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .btn-premium:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-premium:hover::before {
+            left: 100%;
+        }
+        
+        .stats-counter {
+            font-weight: 800;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+        }
+        
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        .section-divider {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            height: 1px;
+            width: 100%;
+            margin: 3rem 0;
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulseGlow {
+            from {
+                box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+            }
+            to {
+                box-shadow: 0 0 30px rgba(102, 126, 234, 0.6), 0 0 40px rgba(102, 126, 234, 0.3);
+            }
+        }
+        
+        .text-glow {
+            text-shadow: 
+                0 0 10px rgba(255, 255, 255, 0.8),
+                0 0 20px rgba(255, 255, 255, 0.6),
+                0 0 30px rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="font-inter">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-gradient-to-br from-indigo-600 to-purple-700 flex items-center justify-center z-50">
+        <div class="text-center text-white">
+            <div class="animate-spin rounded-full h-16 w-16 border-4 border-white border-t-transparent mx-auto mb-4"></div>
+            <h2 class="text-xl font-semibold">Loading Tournament Arena...</h2>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-black bg-opacity-20 backdrop-blur-md">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <!-- Left side - Title -->
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-trophy text-xl text-white"></i>
+                    <h1 class="text-xl font-bold text-white">Tournament Arena</h1>
+                </div>
+                
+                <!-- Right side - Menu Icon -->
+                <button class="text-white p-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all duration-300" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden bg-white bg-opacity-95 backdrop-blur-md border-t border-gray-200">
+            <div class="container mx-auto px-4 py-4 space-y-3">
+                <a href="#features" class="block text-gray-800 hover:text-indigo-600 transition-colors py-2 font-medium">Features</a>
+                <a href="#games" class="block text-gray-800 hover:text-indigo-600 transition-colors py-2 font-medium">Games</a>
+                <a href="#about" class="block text-gray-800 hover:text-indigo-600 transition-colors py-2 font-medium">About</a>
+                <button onclick="showAuthModal('login')" class="block w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg">
+                    Login
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden">
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0">
+            <div class="absolute top-20 left-10 w-20 h-20 bg-white bg-opacity-10 rounded-full animate-float"></div>
+            <div class="absolute top-40 right-20 w-16 h-16 bg-white bg-opacity-10 rounded-full animate-float" style="animation-delay: 2s;"></div>
+            <div class="absolute bottom-40 left-20 w-24 h-24 bg-white bg-opacity-10 rounded-full animate-float" style="animation-delay: 4s;"></div>
+        </div>
+        
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="hero-text text-5xl md:text-7xl font-bold text-white mb-6 leading-tight text-glow">
+                    Enter the <span class="text-yellow-300 stats-counter pulse-glow">Ultimate</span><br>
+                    Gaming Arena
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-200 mb-8 leading-relaxed">
+                    Compete in tournaments, win cash prizes, and become the champion in your favorite games
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button onclick="showAuthModal('register')" class="btn-premium animate-on-scroll">
+                        🚀 Start Playing Now
+                    </button>
+                    <button onclick="showAuthModal('login')" class="glass-effect text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:bg-opacity-20 transition-all border border-white border-opacity-30">
+                        Already a Player?
+                    </button>
+                </div>
+                
+                <!-- Stats Preview -->
+                <div class="grid grid-cols-3 gap-8 mt-16 max-w-md mx-auto">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-yellow-300">50K+</div>
+                        <div class="text-gray-200">Active Players</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-yellow-300">₹2M+</div>
+                        <div class="text-gray-200">Prizes Won</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-yellow-300">100+</div>
+                        <div class="text-gray-200">Daily Matches</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Why Choose Tournament Arena?</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Experience the best gaming platform with cutting-edge features designed for competitive gaming</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="feature-card bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <div class="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-bolt text-2xl text-indigo-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Instant Payments</h3>
+                    <p class="text-gray-600">Lightning-fast deposits and withdrawals through bKash, Nagad, and Rocket</p>
+                </div>
+                
+                <div class="feature-card bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-shield-alt text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">100% Secure</h3>
+                    <p class="text-gray-600">Advanced security measures to protect your account and transactions</p>
+                </div>
+                
+                <div class="feature-card bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-trophy text-2xl text-yellow-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Daily Tournaments</h3>
+                    <p class="text-gray-600">Multiple tournaments every day with guaranteed prize pools</p>
+                </div>
+                
+                <div class="feature-card bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-users text-2xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Fair Play</h3>
+                    <p class="text-gray-600">Anti-cheat systems and manual monitoring for fair competition</p>
+                </div>
+                
+                <div class="feature-card bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <div class="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-headset text-2xl text-red-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">24/7 Support</h3>
+                    <p class="text-gray-600">Round-the-clock customer support to assist with any issues</p>
+                </div>
+                
+                <div class="feature-card bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-mobile-alt text-2xl text-blue-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Mobile Optimized</h3>
+                    <p class="text-gray-600">Seamless experience across all devices and platforms</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section id="games" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Popular Games</h2>
+                <p class="text-xl text-gray-600">Compete in your favorite games and win big</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl p-8 text-white relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h3 class="text-2xl font-bold mb-4">Free Fire</h3>
+                        <p class="mb-6">Battle royale action with fast-paced gameplay</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm bg-white bg-opacity-20 px-3 py-1 rounded-full">Solo • Squad</span>
+                            <i class="fas fa-fire text-3xl"></i>
+                        </div>
+                    </div>
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-white bg-opacity-10 rounded-full transform translate-x-8 -translate-y-8"></div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl p-8 text-white relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h3 class="text-2xl font-bold mb-4">PUBG Mobile</h3>
+                        <p class="mb-6">Ultimate battle royale experience on mobile</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm bg-white bg-opacity-20 px-3 py-1 rounded-full">Squad • Duo</span>
+                            <i class="fas fa-crosshairs text-3xl"></i>
+                        </div>
+                    </div>
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-white bg-opacity-10 rounded-full transform translate-x-8 -translate-y-8"></div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl p-8 text-white relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h3 class="text-2xl font-bold mb-4">Ludo</h3>
+                        <p class="mb-6">Classic board game with modern tournaments</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm bg-white bg-opacity-20 px-3 py-1 rounded-full">2-4 Players</span>
+                            <i class="fas fa-dice text-3xl"></i>
+                        </div>
+                    </div>
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-white bg-opacity-10 rounded-full transform translate-x-8 -translate-y-8"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-4xl font-bold text-gray-800 mb-8">About Tournament Arena</h2>
+                <div class="about-section">
+                    <p class="text-lg text-gray-600 mb-6 leading-relaxed">
+                        Welcome to Tournament Arena, the ultimate destination for competitive gaming enthusiasts. We are passionate about bringing gamers together in a fair, exciting, and rewarding environment where skill meets opportunity.
+                    </p>
+                    <p class="text-lg text-gray-600 mb-6 leading-relaxed">
+                        Founded by gaming enthusiasts for gaming enthusiasts, our platform hosts tournaments for popular mobile games including Free Fire, PUBG Mobile, and classic games like Ludo. With over 50,000 active players and ₹2M+ in prizes distributed, we've created a thriving community of competitive gamers.
+                    </p>
+                    <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                        Our mission is simple: provide a secure, fair, and exciting platform where gamers can showcase their skills, compete with like-minded players, and win real cash prizes. Every tournament is monitored for fair play, and our advanced anti-cheat systems ensure that skill always prevails.
+                    </p>
+                    
+                    <!-- Key Features Grid -->
+                    <div class="grid md:grid-cols-3 gap-8 mt-12">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-shield-alt text-indigo-600 text-xl"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-800 mb-2">Secure Platform</h3>
+                            <p class="text-gray-600 text-sm">Advanced security measures protect your account and ensure safe transactions</p>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-users text-green-600 text-xl"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-800 mb-2">Fair Competition</h3>
+                            <p class="text-gray-600 text-sm">Anti-cheat systems and manual monitoring ensure every match is fair</p>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-trophy text-yellow-600 text-xl"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-800 mb-2">Real Rewards</h3>
+                            <p class="text-gray-600 text-sm">Instant payouts and guaranteed prize pools for all tournament winners</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Join CTA -->
+                    <div class="mt-12 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl p-8">
+                        <h3 class="text-2xl font-bold mb-4">Ready to Join the Arena?</h3>
+                        <p class="text-indigo-100 mb-6">Start your competitive gaming journey today and compete with thousands of players worldwide</p>
+                        <button onclick="showAuthModal('register')" class="bg-white text-indigo-600 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition-all transform hover:scale-105">
+                            Join Now - It's Free!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white p-3 shadow-lg transition-all duration-300 opacity-0 invisible transform translate-y-4 z-50" style="border-radius: 50%;">
+        <i class="fas fa-chevron-up text-lg"></i>
+    </button>
+
+    <!-- Authentication Modal -->
+    <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl p-8 m-4 max-w-md w-full relative">
+            <button onclick="hideAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <!-- Login Form -->
+            <div id="login-form" class="hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Welcome Back</h2>
+                <form onsubmit="handleLogin(event)">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-semibold mb-2">Email</label>
+                        <input type="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-semibold mb-2">Password</label>
+                        <input type="password" name="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                    <div class="mb-6 text-right">
+                        <button type="button" onclick="showForgotPassword()" class="forgot-password-link text-indigo-600 hover:text-indigo-700 text-sm">
+                            Forgot Password?
+                        </button>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
+                        Login
+                    </button>
+                </form>
+                <p class="text-center mt-4 text-gray-600">
+                    Don't have an account? 
+                    <button onclick="showAuthModal('register')" class="text-indigo-600 font-semibold hover:text-indigo-700">
+                        Sign up
+                    </button>
+                </p>
+            </div>
+            
+            <!-- Forgot Password Form -->
+            <div id="forgot-password-form" class="hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Reset Password</h2>
+                <p class="text-gray-600 text-center mb-6">Enter your email address and we'll send you a link to reset your password.</p>
+                <form onsubmit="handleForgotPassword(event)">
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-semibold mb-2">Email Address</label>
+                        <input type="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
+                        Send Reset Link
+                    </button>
+                </form>
+                <p class="text-center mt-4 text-gray-600">
+                    Remember your password? 
+                    <button onclick="showAuthModal('login')" class="text-indigo-600 font-semibold hover:text-indigo-700">
+                        Back to Login
+                    </button>
+                </p>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="register-form" class="hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Join Tournament Arena</h2>
+                <form onsubmit="handleRegister(event)">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-semibold mb-2">Email</label>
+                        <input type="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-semibold mb-2">Password</label>
+                        <input type="password" name="password" required minlength="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-semibold mb-2">Confirm Password</label>
+                        <input type="password" name="confirmPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
+                        Create Account
+                    </button>
+                </form>
+                <p class="text-center mt-4 text-gray-600">
+                    Already have an account? 
+                    <button onclick="showAuthModal('login')" class="text-indigo-600 font-semibold hover:text-indigo-700">
+                        Login
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <!-- Premium Feature Scripts -->
+    <script src="analytics.js"></script>
+    <script src="chat.js"></script>
+    <script src="bracket.js"></script>
+    <script>
+        // Enhanced JavaScript with Premium Features
+        let currentAuthMode = 'login';
+        let statsAnimated = false;
+
+        // Premium Animation Controller
+        class PremiumAnimations {
+            static init() {
+                this.setupScrollAnimations();
+                this.setupCounterAnimations();
+                this.setupParticleEffects();
+            }
+            
+            static setupScrollAnimations() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('animate-in');
+                            
+                            // Trigger stats counter if it's the stats section
+                            if (entry.target.querySelector('.stats-counter') && !statsAnimated) {
+                                this.animateCounters();
+                                statsAnimated = true;
+                            }
+                        }
+                    });
+                }, { threshold: 0.3 });
+                
+                document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                    observer.observe(el);
+                });
+            }
+            
+            static animateCounters() {
+                document.querySelectorAll('.stats-counter[data-count]').forEach(counter => {
+                    const target = parseInt(counter.dataset.count);
+                    const duration = 2000;
+                    const start = Date.now();
+                    const startValue = 0;
+                    
+                    const animate = () => {
+                        const elapsed = Date.now() - start;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+                        
+                        const current = Math.floor(startValue + (target - startValue) * easeProgress);
+                        
+                        if (counter.textContent.includes('₹')) {
+                            counter.textContent = '₹' + current.toLocaleString() + (target >= 1000000 ? 'M+' : 'K+');
+                        } else {
+                            counter.textContent = current.toLocaleString() + (target >= 1000 ? '+' : '');
+                        }
+                        
+                        if (progress < 1) {
+                            requestAnimationFrame(animate);
+                        }
+                    };
+                    
+                    animate();
+                });
+            }
+            
+            static setupParticleEffects() {
+                // Add floating particles to hero section
+                const hero = document.querySelector('.hero-gradient');
+                if (hero) {
+                    for (let i = 0; i < 20; i++) {
+                        const particle = document.createElement('div');
+                        particle.className = 'particle';
+                        particle.style.cssText = `
+                            position: absolute;
+                            width: ${Math.random() * 4 + 2}px;
+                            height: ${Math.random() * 4 + 2}px;
+                            background: rgba(255, 255, 255, ${Math.random() * 0.5 + 0.3});
+                            border-radius: 50%;
+                            left: ${Math.random() * 100}%;
+                            top: ${Math.random() * 100}%;
+                            animation: floatParticle ${Math.random() * 10 + 10}s linear infinite;
+                            pointer-events: none;
+                        `;
+                        hero.appendChild(particle);
+                    }
+                    
+                    // Add particle animation CSS
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes floatParticle {
+                            0% {
+                                transform: translateY(100vh) rotate(0deg);
+                                opacity: 0;
+                            }
+                            10% {
+                                opacity: 1;
+                            }
+                            90% {
+                                opacity: 1;
+                            }
+                            100% {
+                                transform: translateY(-100px) rotate(360deg);
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize premium animations
+            PremiumAnimations.init();
+            
+            // Initialize all premium systems
+            if (typeof PerformanceManager !== 'undefined') PerformanceManager.init();
+            if (typeof AnimationEngine !== 'undefined') AnimationEngine.init();
+            if (typeof SecurityManager !== 'undefined') SecurityManager.init();
+            
+            // Show premium welcome notification
+            setTimeout(() => {
+                if (window.TournamentAnalytics) {
+                    window.TournamentAnalytics.showNotification(
+                        '🚀 Welcome to Tournament Arena Premium! All systems online.', 
+                        'success', 
+                        4000
+                    );
+                }
+            }, 2000);
+            
+            console.log('🏆 Tournament Arena Premium - Fully Loaded!');
+            
+            // Hide loading screen with animation
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loading-screen');
+                loadingScreen.style.opacity = '0';
+                loadingScreen.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 1500);
+
+            // Enhanced auth state checking
+            firebase.onAuthStateChanged((user) => {
+                if (user) {
+                    // Add premium transition effect
+                    document.body.style.transition = 'all 0.5s ease';
+                    document.body.style.opacity = '0';
+                    setTimeout(() => {
+                        window.location.href = 'home.html';
+                    }, 250);
+                }
+            });
+
+            // Enhanced back to top button functionality
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', () => {
+                const scrolled = window.scrollY;
+                const rate = scrolled * -0.5;
+                
+                // Parallax effect for hero background
+                const hero = document.querySelector('.hero-gradient');
+                if (hero) {
+                    hero.style.transform = `translateY(${rate}px)`;
+                }
+                
+                // Back to top button
+                if (scrolled > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible', 'translate-y-4');
+                    backToTopButton.classList.add('opacity-100', 'visible', 'translate-y-0');
+                } else {
+                    backToTopButton.classList.add('opacity-0', 'invisible', 'translate-y-4');
+                    backToTopButton.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Add premium page transition class
+            document.body.classList.add('page-transition');
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 100);
+        });
+
+        // Mobile menu toggle function
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        function showAuthModal(mode) {
+            currentAuthMode = mode;
+            const modal = document.getElementById('auth-modal');
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const forgotPasswordForm = document.getElementById('forgot-password-form');
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            
+            // Hide all forms first
+            loginForm.classList.add('hidden');
+            registerForm.classList.add('hidden');
+            forgotPasswordForm.classList.add('hidden');
+            
+            // Show the requested form
+            if (mode === 'login') {
+                loginForm.classList.remove('hidden');
+            } else if (mode === 'register') {
+                registerForm.classList.remove('hidden');
+            } else if (mode === 'forgot-password') {
+                forgotPasswordForm.classList.remove('hidden');
+            }
+        }
+
+        function showForgotPassword() {
+            showAuthModal('forgot-password');
+        }
+
+        function hideAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const email = formData.get('email');
+            const password = formData.get('password');
+
+            try {
+                Utils.showLoading(true);
+                await firebase.signInWithEmailAndPassword(email, password);
+                Utils.showToast('Login successful!', 'success');
+                hideAuthModal();
+                setTimeout(() => {
+                    window.location.href = 'home.html';
+                }, 1000);
+            } catch (error) {
+                Utils.showToast('Login failed: ' + error.message, 'error');
+            } finally {
+                Utils.showLoading(false);
+            }
+        }
+
+        async function handleForgotPassword(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const email = formData.get('email');
+
+            try {
+                Utils.showLoading(true);
+                // Simulate API call for forgot password
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                Utils.showToast('Password reset link sent to your email!', 'success');
+                showAuthModal('login');
+            } catch (error) {
+                Utils.showToast('Failed to send reset link. Please try again.', 'error');
+            } finally {
+                Utils.showLoading(false);
+            }
+        }
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuButton = e.target.closest('button');
+            
+            if (mobileMenu && !mobileMenu.contains(e.target) && !menuButton) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('auth-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'auth-modal') {
+                hideAuthModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - Tournament Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        .leaderboard-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .rank-badge {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .rank-1 {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+        
+        .rank-2 {
+            background: linear-gradient(135deg, #c0c0c0 0%, #e5e5e5 100%);
+            box-shadow: 0 0 15px rgba(192, 192, 192, 0.4);
+        }
+        
+        .rank-3 {
+            background: linear-gradient(135deg, #cd7f32 0%, #d4a574 100%);
+            box-shadow: 0 0 15px rgba(205, 127, 50, 0.4);
+        }
+        
+        .player-card {
+            transition: all 0.3s ease;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .player-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .crown-icon {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .stats-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <a href="home.html" class="flex items-center space-x-2">
+                        <i class="fas fa-trophy text-2xl text-indigo-600"></i>
+                        <h1 class="text-xl font-bold text-gray-800">Tournament Arena</h1>
+                    </a>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <a href="home.html" class="text-gray-600 hover:text-indigo-600 transition-colors">Home</a>
+                    <a href="matchlist.html" class="text-gray-600 hover:text-indigo-600 transition-colors">Matches</a>
+                    <a href="leaderboard.html" class="text-indigo-600 font-semibold">Leaderboard</a>
+                    <a href="profile.html" class="text-gray-600 hover:text-indigo-600 transition-colors">Profile</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="leaderboard-gradient py-16">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">
+                🏆 Leaderboard
+            </h1>
+            <p class="text-xl text-gray-200 mb-8">
+                See who's dominating the tournaments and climbing to the top
+            </p>
+            
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <div class="stats-card p-6 rounded-xl text-white">
+                    <div class="text-3xl font-bold mb-2">50,234</div>
+                    <div class="text-gray-200">Total Players</div>
+                </div>
+                <div class="stats-card p-6 rounded-xl text-white">
+                    <div class="text-3xl font-bold mb-2">₹2.4M</div>
+                    <div class="text-gray-200">Total Prizes Won</div>
+                </div>
+                <div class="stats-card p-6 rounded-xl text-white">
+                    <div class="text-3xl font-bold mb-2">1,247</div>
+                    <div class="text-gray-200">Tournaments Completed</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard Content -->
+    <section class="py-12">
+        <div class="container mx-auto px-6">
+            <!-- Filters -->
+            <div class="bg-white rounded-xl shadow-sm border p-6 mb-8">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center space-x-4">
+                        <select id="game-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="">All Games</option>
+                            <option value="free-fire">Free Fire</option>
+                            <option value="pubg">PUBG Mobile</option>
+                            <option value="ludo">Ludo</option>
+                        </select>
+                        
+                        <select id="time-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="all-time">All Time</option>
+                            <option value="this-month">This Month</option>
+                            <option value="this-week">This Week</option>
+                            <option value="today">Today</option>
+                        </select>
+                        
+                        <select id="type-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="winnings">By Winnings</option>
+                            <option value="wins">By Wins</option>
+                            <option value="tournaments">By Tournaments</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex items-center space-x-2">
+                        <button onclick="refreshLeaderboard()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-sync-alt mr-2"></i>Refresh
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top 3 Players -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <!-- 2nd Place -->
+                <div class="player-card bg-white shadow-lg border order-2 md:order-1">
+                    <div class="p-6 text-center">
+                        <div class="relative mb-4">
+                            <img src="https://ui-avatars.com/api/?name=Jane+Smith&background=random&size=80" 
+                                 alt="Jane Smith" class="w-20 h-20 rounded-full mx-auto">
+                            <div class="rank-badge rank-2 absolute -top-2 -right-2">2</div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Jane Smith</h3>
+                        <p class="text-gray-600 mb-4">Pro Gamer</p>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Total Winnings:</span>
+                                <span class="font-bold text-green-600">₹1,24,500</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Tournaments Won:</span>
+                                <span class="font-bold">47</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Win Rate:</span>
+                                <span class="font-bold">78%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1st Place -->
+                <div class="player-card bg-gradient-to-br from-yellow-400 to-yellow-600 text-white shadow-xl order-1 md:order-2 transform md:scale-110">
+                    <div class="p-6 text-center">
+                        <div class="crown-icon text-4xl mb-2">👑</div>
+                        <div class="relative mb-4">
+                            <img src="https://ui-avatars.com/api/?name=Alex+Johnson&background=random&size=80" 
+                                 alt="Alex Johnson" class="w-20 h-20 rounded-full mx-auto border-4 border-white">
+                            <div class="rank-badge rank-1 absolute -top-2 -right-2">1</div>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Alex Johnson</h3>
+                        <p class="text-yellow-100 mb-4">Champion</p>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-yellow-100">Total Winnings:</span>
+                                <span class="font-bold">₹2,47,800</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-yellow-100">Tournaments Won:</span>
+                                <span class="font-bold">83</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-yellow-100">Win Rate:</span>
+                                <span class="font-bold">89%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3rd Place -->
+                <div class="player-card bg-white shadow-lg border order-3">
+                    <div class="p-6 text-center">
+                        <div class="relative mb-4">
+                            <img src="https://ui-avatars.com/api/?name=Mike+Wilson&background=random&size=80" 
+                                 alt="Mike Wilson" class="w-20 h-20 rounded-full mx-auto">
+                            <div class="rank-badge rank-3 absolute -top-2 -right-2">3</div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Mike Wilson</h3>
+                        <p class="text-gray-600 mb-4">Elite Player</p>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Total Winnings:</span>
+                                <span class="font-bold text-green-600">₹98,750</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Tournaments Won:</span>
+                                <span class="font-bold">35</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Win Rate:</span>
+                                <span class="font-bold">72%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Leaderboard -->
+            <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                <div class="p-6 border-b">
+                    <h2 class="text-2xl font-bold text-gray-800">Complete Rankings</h2>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rank</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Player</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Winnings</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tournaments Won</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Win Rate</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Favorite Game</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Level</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-table" class="bg-white divide-y divide-gray-200">
+                            <!-- Leaderboard entries will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="px-6 py-4 border-t bg-gray-50">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-600">
+                            Showing 1 to 50 of 50,234 players
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-100">Previous</button>
+                            <button class="px-3 py-1 bg-indigo-600 text-white rounded text-sm">1</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-100">2</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-100">3</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-100">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Premium Scripts -->
+    <script src="app.js"></script>
+    <script src="analytics.js"></script>
+    <script src="chat.js"></script>
+
+    <script>
+        // Leaderboard Management System
+        class LeaderboardManager {
+            constructor() {
+                this.players = [];
+                this.filteredPlayers = [];
+                this.currentPage = 1;
+                this.playersPerPage = 50;
+                this.init();
+            }
+
+            init() {
+                this.loadLeaderboardData();
+                this.setupEventListeners();
+                this.renderLeaderboard();
+            }
+
+            loadLeaderboardData() {
+                // Sample leaderboard data
+                this.players = [
+                    { rank: 4, name: 'Sarah Connor', winnings: 87250, wins: 28, winRate: 68, game: 'Free Fire', level: 'Pro', avatar: 'https://ui-avatars.com/api/?name=Sarah+Connor&background=random' },
+                    { rank: 5, name: 'David Lee', winnings: 76800, wins: 31, winRate: 65, game: 'PUBG Mobile', level: 'Elite', avatar: 'https://ui-avatars.com/api/?name=David+Lee&background=random' },
+                    { rank: 6, name: 'Emma Watson', winnings: 69500, wins: 24, winRate: 71, game: 'Free Fire', level: 'Pro', avatar: 'https://ui-avatars.com/api/?name=Emma+Watson&background=random' },
+                    { rank: 7, name: 'John Smith', winnings: 62300, wins: 29, winRate: 59, game: 'Ludo', level: 'Advanced', avatar: 'https://ui-avatars.com/api/?name=John+Smith&background=random' },
+                    { rank: 8, name: 'Lisa Brown', winnings: 58900, wins: 22, winRate: 73, game: 'PUBG Mobile', level: 'Pro', avatar: 'https://ui-avatars.com/api/?name=Lisa+Brown&background=random' },
+                    { rank: 9, name: 'Tom Wilson', winnings: 54200, wins: 26, winRate: 61, game: 'Free Fire', level: 'Advanced', avatar: 'https://ui-avatars.com/api/?name=Tom+Wilson&background=random' },
+                    { rank: 10, name: 'Anna Garcia', winnings: 49800, wins: 19, winRate: 76, game: 'Ludo', level: 'Pro', avatar: 'https://ui-avatars.com/api/?name=Anna+Garcia&background=random' }
+                ];
+                
+                // Generate more sample data
+                for (let i = 11; i <= 50; i++) {
+                    this.players.push({
+                        rank: i,
+                        name: `Player ${i}`,
+                        winnings: Math.floor(Math.random() * 40000) + 10000,
+                        wins: Math.floor(Math.random() * 25) + 5,
+                        winRate: Math.floor(Math.random() * 40) + 50,
+                        game: ['Free Fire', 'PUBG Mobile', 'Ludo'][Math.floor(Math.random() * 3)],
+                        level: ['Beginner', 'Advanced', 'Pro', 'Elite'][Math.floor(Math.random() * 4)],
+                        avatar: `https://ui-avatars.com/api/?name=Player+${i}&background=random`
+                    });
+                }
+                
+                this.filteredPlayers = [...this.players];
+            }
+
+            setupEventListeners() {
+                document.getElementById('game-filter').addEventListener('change', () => this.filterLeaderboard());
+                document.getElementById('time-filter').addEventListener('change', () => this.filterLeaderboard());
+                document.getElementById('type-filter').addEventListener('change', () => this.filterLeaderboard());
+            }
+
+            filterLeaderboard() {
+                const gameFilter = document.getElementById('game-filter').value;
+                const timeFilter = document.getElementById('time-filter').value;
+                const typeFilter = document.getElementById('type-filter').value;
+
+                this.filteredPlayers = this.players.filter(player => {
+                    return !gameFilter || player.game === gameFilter;
+                });
+
+                // Sort based on type filter
+                if (typeFilter === 'winnings') {
+                    this.filteredPlayers.sort((a, b) => b.winnings - a.winnings);
+                } else if (typeFilter === 'wins') {
+                    this.filteredPlayers.sort((a, b) => b.wins - a.wins);
+                } else if (typeFilter === 'tournaments') {
+                    this.filteredPlayers.sort((a, b) => (b.wins + Math.floor(Math.random() * 10)) - (a.wins + Math.floor(Math.random() * 10)));
+                }
+
+                // Update ranks
+                this.filteredPlayers.forEach((player, index) => {
+                    player.rank = index + 1;
+                });
+
+                this.renderLeaderboard();
+            }
+
+            renderLeaderboard() {
+                const tbody = document.getElementById('leaderboard-table');
+                const startIndex = (this.currentPage - 1) * this.playersPerPage;
+                const endIndex = startIndex + this.playersPerPage;
+                const paginatedPlayers = this.filteredPlayers.slice(startIndex, endIndex);
+
+                tbody.innerHTML = paginatedPlayers.map(player => `
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="rank-badge ${player.rank <= 3 ? `rank-${player.rank}` : ''} text-sm w-8 h-8">
+                                    ${player.rank}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <img src="${player.avatar}" alt="${player.name}" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <div class="text-sm font-medium text-gray-900">${player.name}</div>
+                                    <div class="text-sm text-gray-500">Level: ${player.level}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-bold text-green-600">₹${player.winnings.toLocaleString()}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-semibold text-gray-900">${player.wins}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-semibold text-gray-900">${player.winRate}%</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full ${this.getGameBadgeColor(player.game)}">
+                                ${player.game}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full ${this.getLevelBadgeColor(player.level)}">
+                                ${player.level}
+                            </span>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            getGameBadgeColor(game) {
+                const colors = {
+                    'Free Fire': 'bg-red-100 text-red-800',
+                    'PUBG Mobile': 'bg-blue-100 text-blue-800',
+                    'Ludo': 'bg-green-100 text-green-800'
+                };
+                return colors[game] || 'bg-gray-100 text-gray-800';
+            }
+
+            getLevelBadgeColor(level) {
+                const colors = {
+                    'Beginner': 'bg-gray-100 text-gray-800',
+                    'Advanced': 'bg-blue-100 text-blue-800',
+                    'Pro': 'bg-purple-100 text-purple-800',
+                    'Elite': 'bg-yellow-100 text-yellow-800'
+                };
+                return colors[level] || 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        // Initialize Leaderboard
+        const leaderboardManager = new LeaderboardManager();
+
+        function refreshLeaderboard() {
+            leaderboardManager.loadLeaderboardData();
+            leaderboardManager.renderLeaderboard();
+            
+            if (window.TournamentAnalytics) {
+                window.TournamentAnalytics.showNotification('Leaderboard refreshed!', 'success', 2000);
+            }
+        }
+
+        // Page load animations
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animate player cards
+            const cards = document.querySelectorAll('.player-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>

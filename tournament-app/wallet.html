@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet - Tournament Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-gray-800 to-gray-900 text-white transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40" id="sidebar">
+        <div class="p-6">
+            <div class="flex items-center space-x-3 mb-8">
+                <i class="fas fa-trophy text-2xl text-yellow-400"></i>
+                <h1 class="text-xl font-bold">Tournament Arena</h1>
+            </div>
+            
+            <nav class="space-y-2">
+                <a href="home.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-home w-5"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="matchlist.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-gamepad w-5"></i>
+                    <span>Matches</span>
+                </a>
+                <a href="wallet.html" class="flex items-center space-x-3 p-3 rounded-lg bg-white bg-opacity-20 text-white">
+                    <i class="fas fa-wallet w-5"></i>
+                    <span>Wallet</span>
+                </a>
+                <a href="profile.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-user w-5"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="top.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-crown w-5"></i>
+                    <span>Leaderboard</span>
+                </a>
+                <button onclick="handleLogout()" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-red-600 transition-colors w-full text-left">
+                    <i class="fas fa-sign-out-alt w-5"></i>
+                    <span>Logout</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="md:ml-64 min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200 p-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="md:hidden text-gray-600" onclick="toggleSidebar()">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h1 class="text-2xl font-bold text-gray-800">My Wallet</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <img id="user-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-full">
+                    <span id="user-name">Loading...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Wallet Content -->
+        <main class="p-6">
+            <!-- Balance Cards -->
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-6 rounded-2xl">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-white text-opacity-80 text-sm mb-2">Deposit Balance</p>
+                            <p class="text-3xl font-bold" id="deposit-balance">₹0</p>
+                        </div>
+                        <div class="bg-white bg-opacity-20 p-3 rounded-full">
+                            <i class="fas fa-wallet text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 rounded-2xl">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-white text-opacity-80 text-sm mb-2">Winning Balance</p>
+                            <p class="text-3xl font-bold" id="winning-balance">₹0</p>
+                        </div>
+                        <div class="bg-white bg-opacity-20 p-3 rounded-full">
+                            <i class="fas fa-trophy text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid md:grid-cols-2 gap-4 mb-8">
+                <button onclick="showDepositModal()" class="bg-indigo-600 text-white p-4 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Add Money
+                </button>
+                <button onclick="showWithdrawModal()" class="bg-green-600 text-white p-4 rounded-xl font-semibold hover:bg-green-700 transition-colors">
+                    <i class="fas fa-money-bill-wave mr-2"></i>Withdraw
+                </button>
+            </div>
+
+            <!-- Transaction History -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-semibold text-gray-800">Transaction History</h2>
+                        <div class="flex space-x-2">
+                            <button onclick="filterTransactions('all')" class="transaction-filter active px-3 py-1 text-sm rounded-full">All</button>
+                            <button onclick="filterTransactions('pending')" class="transaction-filter px-3 py-1 text-sm rounded-full">Pending</button>
+                            <button onclick="filterTransactions('success')" class="transaction-filter px-3 py-1 text-sm rounded-full">Success</button>
+                            <button onclick="filterTransactions('rejected')" class="transaction-filter px-3 py-1 text-sm rounded-full">Rejected</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="transactions-container" class="p-6">
+                    <!-- Transactions will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Deposit Modal -->
+    <div id="deposit-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl p-8 m-4 max-w-md w-full">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Add Money</h2>
+            
+            <form onsubmit="handleDeposit(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-semibold mb-2">Amount</label>
+                    <input type="number" name="amount" min="10" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-semibold mb-2">Payment Method</label>
+                    <div class="space-y-3">
+                        <label class="flex items-center space-x-3 p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="payment_method" value="bkash" required class="text-indigo-600">
+                            <i class="fas fa-mobile text-pink-500"></i>
+                            <span>bKash</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="payment_method" value="nagad" required class="text-indigo-600">
+                            <i class="fas fa-mobile text-orange-500"></i>
+                            <span>Nagad</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="payment_method" value="rocket" required class="text-indigo-600">
+                            <i class="fas fa-mobile text-purple-500"></i>
+                            <span>Rocket</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button type="button" onclick="closeDepositModal()" class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-lg font-semibold">
+                        Cancel
+                    </button>
+                    <button type="submit" class="flex-1 bg-indigo-600 text-white py-3 rounded-lg font-semibold">
+                        Proceed
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div id="withdraw-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl p-8 m-4 max-w-md w-full">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Withdraw Money</h2>
+            
+            <form onsubmit="handleWithdraw(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-semibold mb-2">Amount</label>
+                    <input type="number" name="amount" min="100" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
+                    <p class="text-sm text-gray-500 mt-1">Minimum withdrawal: ₹100</p>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-semibold mb-2">Account Number</label>
+                    <input type="text" name="account_number" placeholder="Enter your mobile number" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-semibold mb-2">Payment Method</label>
+                    <select name="payment_method" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
+                        <option value="">Select payment method</option>
+                        <option value="bkash">bKash</option>
+                        <option value="nagad">Nagad</option>
+                        <option value="rocket">Rocket</option>
+                    </select>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button type="button" onclick="closeWithdrawModal()" class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-lg font-semibold">
+                        Cancel
+                    </button>
+                    <button type="submit" class="flex-1 bg-green-600 text-white py-3 rounded-lg font-semibold">
+                        Withdraw
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden" onclick="closeSidebar()"></div>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white p-3 shadow-lg transition-all duration-300 opacity-0 invisible transform translate-y-4 z-50" style="border-radius: 50%;">
+        <i class="fas fa-chevron-up text-lg"></i>
+    </button>
+
+    <script src="app.js"></script>
+    <script>
+        let currentUser = null;
+        let userProfile = null;
+        let transactions = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            firebase.onAuthStateChanged(async (user) => {
+                if (!user) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                currentUser = user;
+                await loadUserProfile();
+                await loadTransactions();
+            });
+
+            // Back to top button functionality
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible', 'translate-y-4');
+                    backToTopButton.classList.add('opacity-100', 'visible', 'translate-y-0');
+                } else {
+                    backToTopButton.classList.add('opacity-0', 'invisible', 'translate-y-4');
+                    backToTopButton.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        async function loadUserProfile() {
+            userProfile = await firebase.getUserProfile(currentUser.uid);
+            if (userProfile) {
+                document.getElementById('user-name').textContent = userProfile.displayName;
+                document.getElementById('user-avatar').src = userProfile.photoURL || Utils.generateAvatar(userProfile.displayName);
+                document.getElementById('deposit-balance').textContent = Utils.formatCurrency(userProfile.balance || 0);
+                document.getElementById('winning-balance').textContent = Utils.formatCurrency(userProfile.winningBalance || 0);
+            }
+        }
+
+        async function loadTransactions() {
+            transactions = await firebase.getTransactions(currentUser.uid);
+            
+            // Add sample transactions if none exist
+            if (transactions.length === 0) {
+                const sampleTransactions = [
+                    {
+                        id: 'txn_1',
+                        type: 'deposit',
+                        amount: 1000,
+                        method: 'bkash',
+                        status: 'success',
+                        timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+                    },
+                    {
+                        id: 'txn_2',
+                        type: 'withdraw',
+                        amount: 500,
+                        method: 'nagad',
+                        status: 'pending',
+                        timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+                    },
+                    {
+                        id: 'txn_3',
+                        type: 'deposit',
+                        amount: 250,
+                        method: 'rocket',
+                        status: 'success',
+                        timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString()
+                    }
+                ];
+                
+                for (const txn of sampleTransactions) {
+                    await firebase.addTransaction(currentUser.uid, txn);
+                }
+                transactions = await firebase.getTransactions(currentUser.uid);
+            }
+            
+            renderTransactions();
+        }
+
+        function renderTransactions(filter = 'all') {
+            const container = document.getElementById('transactions-container');
+            const filteredTransactions = filter === 'all' ? transactions : transactions.filter(t => t.status === filter);
+            
+            if (filteredTransactions.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">No transactions found</p>';
+                return;
+            }
+            
+            container.innerHTML = filteredTransactions.map(transaction => `
+                <div class="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 ${getTransactionColor(transaction.type)} rounded-full flex items-center justify-center">
+                            <i class="fas fa-${getTransactionIcon(transaction.type)} text-white"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800">${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}</p>
+                            <p class="text-sm text-gray-500">${Utils.formatDate(transaction.timestamp)}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold ${transaction.type === 'deposit' ? 'text-green-600' : 'text-red-600'}">
+                            ${transaction.type === 'deposit' ? '+' : '-'}${Utils.formatCurrency(transaction.amount)}
+                        </p>
+                        <span class="inline-block px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(transaction.status)}">
+                            ${transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getTransactionColor(type) {
+            return type === 'deposit' ? 'bg-green-500' : 'bg-red-500';
+        }
+
+        function getTransactionIcon(type) {
+            return type === 'deposit' ? 'arrow-down' : 'arrow-up';
+        }
+
+        function getStatusColor(status) {
+            switch (status) {
+                case 'success': return 'bg-green-100 text-green-800';
+                case 'pending': return 'bg-yellow-100 text-yellow-800';
+                case 'rejected': return 'bg-red-100 text-red-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        function filterTransactions(status) {
+            document.querySelectorAll('.transaction-filter').forEach(btn => {
+                btn.classList.remove('active', 'bg-indigo-600', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-600');
+            });
+            event.target.classList.add('active', 'bg-indigo-600', 'text-white');
+            event.target.classList.remove('bg-gray-100', 'text-gray-600');
+            
+            renderTransactions(status);
+        }
+
+        function showDepositModal() {
+            document.getElementById('deposit-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDepositModal() {
+            document.getElementById('deposit-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function showWithdrawModal() {
+            document.getElementById('withdraw-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeWithdrawModal() {
+            document.getElementById('withdraw-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        async function handleDeposit(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const amount = parseInt(formData.get('amount'));
+            const method = formData.get('payment_method');
+
+            try {
+                Utils.showLoading(true);
+                
+                // Simulate processing
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Add transaction
+                const transaction = {
+                    type: 'deposit',
+                    amount: amount,
+                    method: method,
+                    status: 'success'
+                };
+                
+                await firebase.addTransaction(currentUser.uid, transaction);
+                
+                // Update balance
+                userProfile.balance += amount;
+                await firebase.updateUserProfile(currentUser.uid, { balance: userProfile.balance });
+                
+                // Refresh UI
+                await loadUserProfile();
+                await loadTransactions();
+                
+                Utils.showToast('Money added successfully!', 'success');
+                closeDepositModal();
+                
+            } catch (error) {
+                Utils.showToast('Failed to add money', 'error');
+            } finally {
+                Utils.showLoading(false);
+            }
+        }
+
+        async function handleWithdraw(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const amount = parseInt(formData.get('amount'));
+            const accountNumber = formData.get('account_number');
+            const method = formData.get('payment_method');
+
+            if (amount > userProfile.balance) {
+                Utils.showToast('Insufficient balance', 'error');
+                return;
+            }
+
+            try {
+                Utils.showLoading(true);
+                
+                // Simulate processing
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Add transaction
+                const transaction = {
+                    type: 'withdraw',
+                    amount: amount,
+                    method: method,
+                    accountNumber: accountNumber,
+                    status: 'pending'
+                };
+                
+                await firebase.addTransaction(currentUser.uid, transaction);
+                
+                // Update balance
+                userProfile.balance -= amount;
+                await firebase.updateUserProfile(currentUser.uid, { balance: userProfile.balance });
+                
+                // Refresh UI
+                await loadUserProfile();
+                await loadTransactions();
+                
+                Utils.showToast('Withdrawal request submitted!', 'success');
+                closeWithdrawModal();
+                
+            } catch (error) {
+                Utils.showToast('Failed to process withdrawal', 'error');
+            } finally {
+                Utils.showLoading(false);
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                await firebase.signOut();
+                Utils.showToast('Logged out successfully', 'success');
+                window.location.href = 'index.html';
+            } catch (error) {
+                Utils.showToast('Error logging out', 'error');
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

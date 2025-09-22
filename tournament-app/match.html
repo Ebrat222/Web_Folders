@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Details - Tournament Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button onclick="goBack()" class="p-2 hover:bg-gray-100 rounded-lg">
+                        <i class="fas fa-arrow-left text-gray-600"></i>
+                    </button>
+                    <h1 class="text-2xl font-bold text-gray-800">Match Details</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <img id="user-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-full">
+                    <span id="user-balance">₹0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <div id="match-content" class="max-w-4xl mx-auto">
+            <!-- Match will be loaded here -->
+        </div>
+    </main>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white p-3 shadow-lg transition-all duration-300 opacity-0 invisible transform translate-y-4 z-50" style="border-radius: 50%;">
+        <i class="fas fa-chevron-up text-lg"></i>
+    </button>
+
+    <script src="app.js"></script>
+    <script>
+        let currentUser = null;
+        let userProfile = null;
+        let currentMatch = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            firebase.onAuthStateChanged(async (user) => {
+                if (!user) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                currentUser = user;
+                await loadUserProfile();
+                await loadMatch();
+            });
+
+            // Back to top button functionality
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible', 'translate-y-4');
+                    backToTopButton.classList.add('opacity-100', 'visible', 'translate-y-0');
+                } else {
+                    backToTopButton.classList.add('opacity-0', 'invisible', 'translate-y-4');
+                    backToTopButton.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        async function loadUserProfile() {
+            userProfile = await firebase.getUserProfile(currentUser.uid);
+            if (userProfile) {
+                document.getElementById('user-balance').textContent = Utils.formatCurrency(userProfile.balance);
+                document.getElementById('user-avatar').src = userProfile.photoURL || Utils.generateAvatar(userProfile.displayName);
+            }
+        }
+
+        async function loadMatch() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const matchId = urlParams.get('id');
+            
+            if (!matchId) {
+                window.location.href = 'matchlist.html';
+                return;
+            }
+
+            currentMatch = await firebase.getMatch(matchId);
+            if (!currentMatch) {
+                Utils.showToast('Match not found', 'error');
+                window.location.href = 'matchlist.html';
+                return;
+            }
+
+            renderMatch();
+        }
+
+        function renderMatch() {
+            const container = document.getElementById('match-content');
+            container.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <!-- Match Header -->
+                    <div class="bg-gradient-to-r ${getGameGradient(currentMatch.game)} text-white p-8">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-16 h-16 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center">
+                                    <i class="fas fa-${getGameIcon(currentMatch.game)} text-3xl"></i>
+                                </div>
+                                <div>
+                                    <h1 class="text-3xl font-bold mb-2">${currentMatch.title}</h1>
+                                    <p class="text-white text-opacity-80">${getGameName(currentMatch.game)}</p>
+                                </div>
+                            </div>
+                            <span class="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-semibold">
+                                ${currentMatch.status.toUpperCase()}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Match Info -->
+                    <div class="p-8">
+                        <div class="grid md:grid-cols-3 gap-6 mb-8">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-indigo-600 mb-2">${Utils.formatCurrency(currentMatch.entryFee)}</div>
+                                <div class="text-gray-600">Entry Fee</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-green-600 mb-2">${Utils.formatCurrency(currentMatch.prizePool)}</div>
+                                <div class="text-gray-600">Prize Pool</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-purple-600 mb-2">${currentMatch.currentPlayers}/${currentMatch.maxPlayers}</div>
+                                <div class="text-gray-600">Players</div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="mb-8">
+                            <div class="flex justify-between text-sm text-gray-600 mb-2">
+                                <span>Registration Progress</span>
+                                <span>${Math.round((currentMatch.currentPlayers / currentMatch.maxPlayers) * 100)}%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 h-3 rounded-full" 
+                                     style="width: ${(currentMatch.currentPlayers / currentMatch.maxPlayers) * 100}%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Game Rules -->
+                        <div class="mb-8">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">Game Rules</h2>
+                            <div class="bg-gray-50 rounded-xl p-6">
+                                <ul class="space-y-3">
+                                    ${currentMatch.rules.map(rule => `
+                                        <li class="flex items-start space-x-3">
+                                            <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                                            <span class="text-gray-700">${rule}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Additional Info -->
+                        <div class="grid md:grid-cols-2 gap-6 mb-8">
+                            <div class="bg-gray-50 rounded-xl p-6">
+                                <h3 class="font-semibold text-gray-800 mb-4">Match Details</h3>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">Start Time:</span>
+                                        <span class="font-medium">${Utils.formatDate(currentMatch.startTime)}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">Game Mode:</span>
+                                        <span class="font-medium">${getGameMode(currentMatch.game)}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">Platform:</span>
+                                        <span class="font-medium">Mobile</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50 rounded-xl p-6">
+                                <h3 class="font-semibold text-gray-800 mb-4">Prize Distribution</h3>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">1st Place:</span>
+                                        <span class="font-medium text-yellow-600">₹${Math.floor(currentMatch.prizePool * 0.5)}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">2nd Place:</span>
+                                        <span class="font-medium text-gray-600">₹${Math.floor(currentMatch.prizePool * 0.3)}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">3rd Place:</span>
+                                        <span class="font-medium text-orange-600">₹${Math.floor(currentMatch.prizePool * 0.2)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            ${getActionButtons()}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getGameGradient(game) {
+            switch (game) {
+                case 'freefire': return 'from-orange-500 to-red-600';
+                case 'pubg': return 'from-blue-500 to-indigo-600';
+                case 'ludo': return 'from-green-500 to-emerald-600';
+                default: return 'from-gray-500 to-gray-600';
+            }
+        }
+
+        function getGameIcon(game) {
+            switch (game) {
+                case 'freefire': return 'fire';
+                case 'pubg': return 'crosshairs';
+                case 'ludo': return 'dice';
+                default: return 'gamepad';
+            }
+        }
+
+        function getGameName(game) {
+            switch (game) {
+                case 'freefire': return 'Free Fire';
+                case 'pubg': return 'PUBG Mobile';
+                case 'ludo': return 'Ludo';
+                default: return 'Game';
+            }
+        }
+
+        function getGameMode(game) {
+            switch (game) {
+                case 'freefire': return 'Battle Royale Solo';
+                case 'pubg': return 'Squad (4 Players)';
+                case 'ludo': return 'Classic Mode';
+                default: return 'Standard';
+            }
+        }
+
+        function getActionButtons() {
+            if (currentMatch.status === 'finished') {
+                return `
+                    <button class="flex-1 bg-gray-300 text-gray-500 py-3 px-6 rounded-xl font-semibold cursor-not-allowed" disabled>
+                        Tournament Finished
+                    </button>
+                    <button onclick="viewResults()" class="flex-1 bg-indigo-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
+                        View Results
+                    </button>
+                `;
+            }
+
+            if (currentMatch.currentPlayers >= currentMatch.maxPlayers) {
+                return `
+                    <button class="flex-1 bg-red-100 text-red-600 py-3 px-6 rounded-xl font-semibold cursor-not-allowed" disabled>
+                        Tournament Full
+                    </button>
+                    <button onclick="joinWaitlist()" class="flex-1 bg-yellow-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-yellow-700 transition-colors">
+                        Join Waitlist
+                    </button>
+                `;
+            }
+
+            if (userProfile && userProfile.balance < currentMatch.entryFee) {
+                return `
+                    <button onclick="goToWallet()" class="flex-1 bg-yellow-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-yellow-700 transition-colors">
+                        Add Money (Insufficient Balance)
+                    </button>
+                    <button class="flex-1 bg-gray-300 text-gray-500 py-3 px-6 rounded-xl font-semibold cursor-not-allowed" disabled>
+                        Join Tournament
+                    </button>
+                `;
+            }
+
+            return `
+                <button onclick="shareMatch()" class="sm:w-auto w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-xl font-semibold hover:bg-gray-200 transition-colors">
+                    <i class="fas fa-share mr-2"></i>Share
+                </button>
+                <button onclick="joinTournament()" class="flex-1 bg-indigo-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
+                    Join Tournament - ${Utils.formatCurrency(currentMatch.entryFee)}
+                </button>
+            `;
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function goToWallet() {
+            window.location.href = 'wallet.html';
+        }
+
+        function shareMatch() {
+            if (navigator.share) {
+                navigator.share({
+                    title: currentMatch.title,
+                    text: `Join ${currentMatch.title} tournament on Tournament Arena!`,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(window.location.href);
+                Utils.showToast('Link copied to clipboard', 'success');
+            }
+        }
+
+        async function joinTournament() {
+            if (!userProfile || userProfile.balance < currentMatch.entryFee) {
+                Utils.showToast('Insufficient balance', 'error');
+                return;
+            }
+
+            if (confirm(`Join ${currentMatch.title} for ${Utils.formatCurrency(currentMatch.entryFee)}?`)) {
+                try {
+                    Utils.showLoading(true);
+                    
+                    // Simulate joining
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    // Update balance
+                    userProfile.balance -= currentMatch.entryFee;
+                    await firebase.updateUserProfile(currentUser.uid, { balance: userProfile.balance });
+                    
+                    // Update UI
+                    document.getElementById('user-balance').textContent = Utils.formatCurrency(userProfile.balance);
+                    
+                    Utils.showToast('Successfully joined the tournament!', 'success');
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = 'home.html';
+                    }, 2000);
+                    
+                } catch (error) {
+                    Utils.showToast('Failed to join tournament', 'error');
+                } finally {
+                    Utils.showLoading(false);
+                }
+            }
+        }
+
+        function joinWaitlist() {
+            Utils.showToast('Added to waitlist! You will be notified if a spot opens up.', 'success');
+        }
+
+        function viewResults() {
+            Utils.showToast('Results will be available soon', 'info');
+        }
+    </script>
+</body>
+</html>

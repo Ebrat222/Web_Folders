@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matches - Tournament Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-gray-800 to-gray-900 text-white transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40" id="sidebar">
+        <div class="p-6">
+            <div class="flex items-center space-x-3 mb-8">
+                <i class="fas fa-trophy text-2xl text-yellow-400"></i>
+                <h1 class="text-xl font-bold">Tournament Arena</h1>
+            </div>
+            
+            <nav class="space-y-2">
+                <a href="home.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-home w-5"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="matchlist.html" class="flex items-center space-x-3 p-3 rounded-lg bg-white bg-opacity-20 text-white">
+                    <i class="fas fa-gamepad w-5"></i>
+                    <span>Matches</span>
+                </a>
+                <a href="wallet.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-wallet w-5"></i>
+                    <span>Wallet</span>
+                </a>
+                <a href="profile.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-user w-5"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="top.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-crown w-5"></i>
+                    <span>Leaderboard</span>
+                </a>
+                <button onclick="handleLogout()" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-red-600 transition-colors w-full text-left">
+                    <i class="fas fa-sign-out-alt w-5"></i>
+                    <span>Logout</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="md:ml-64 min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200 p-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="md:hidden text-gray-600" onclick="toggleSidebar()">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h1 class="text-2xl font-bold text-gray-800">Tournaments</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <img id="user-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-full">
+                    <span id="user-balance">₹0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Filter Tabs -->
+        <div class="p-6">
+            <div class="flex space-x-2 mb-6">
+                <button onclick="filterMatches('all')" class="filter-tab bg-indigo-600 text-white px-4 py-2 rounded-lg">All</button>
+                <button onclick="filterMatches('live')" class="filter-tab bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Live</button>
+                <button onclick="filterMatches('upcoming')" class="filter-tab bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Upcoming</button>
+                <button onclick="filterMatches('finished')" class="filter-tab bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Finished</button>
+            </div>
+
+            <!-- Game Filters -->
+            <div class="flex space-x-2 mb-6">
+                <button onclick="filterByGame('all')" class="game-filter bg-indigo-600 text-white px-4 py-2 rounded-lg">All Games</button>
+                <button onclick="filterByGame('freefire')" class="game-filter bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Free Fire</button>
+                <button onclick="filterByGame('pubg')" class="game-filter bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">PUBG</button>
+                <button onclick="filterByGame('ludo')" class="game-filter bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Ludo</button>
+            </div>
+
+            <!-- Matches Container -->
+            <div id="matches-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Matches will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden" onclick="closeSidebar()"></div>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white p-3 shadow-lg transition-all duration-300 opacity-0 invisible transform translate-y-4 z-50" style="border-radius: 50%;">
+        <i class="fas fa-chevron-up text-lg"></i>
+    </button>
+
+    <script src="app.js"></script>
+    <script>
+        let currentUser = null;
+        let allMatches = [];
+        let filteredMatches = [];
+        let currentFilter = 'all';
+        let currentGameFilter = 'all';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            firebase.onAuthStateChanged(async (user) => {
+                if (!user) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                currentUser = user;
+                await loadUserProfile();
+                await loadMatches();
+            });
+
+            // Back to top button functionality
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible', 'translate-y-4');
+                    backToTopButton.classList.add('opacity-100', 'visible', 'translate-y-0');
+                } else {
+                    backToTopButton.classList.add('opacity-0', 'invisible', 'translate-y-4');
+                    backToTopButton.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        async function loadUserProfile() {
+            const profile = await firebase.getUserProfile(currentUser.uid);
+            if (profile) {
+                document.getElementById('user-balance').textContent = Utils.formatCurrency(profile.balance);
+                document.getElementById('user-avatar').src = profile.photoURL || Utils.generateAvatar(profile.displayName);
+            }
+        }
+
+        async function loadMatches() {
+            allMatches = await firebase.getMatches();
+            filteredMatches = [...allMatches];
+            renderMatches();
+        }
+
+        function renderMatches() {
+            const container = document.getElementById('matches-container');
+            container.innerHTML = filteredMatches.map(match => `
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-lg">${match.title}</h3>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold ${getStatusClass(match.status)}">
+                            ${match.status.toUpperCase()}
+                        </span>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between">
+                            <span>Entry Fee:</span>
+                            <span class="font-bold">${Utils.formatCurrency(match.entryFee)}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Prize Pool:</span>
+                            <span class="font-bold text-green-600">${Utils.formatCurrency(match.prizePool)}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Players:</span>
+                            <span>${match.currentPlayers}/${match.maxPlayers}</span>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="viewMatch('${match.id}')" class="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg">
+                            View
+                        </button>
+                        ${getJoinButton(match)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusClass(status) {
+            switch (status) {
+                case 'live': return 'bg-green-100 text-green-800';
+                case 'upcoming': return 'bg-yellow-100 text-yellow-800';
+                case 'finished': return 'bg-gray-100 text-gray-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        function getJoinButton(match) {
+            if (match.status === 'finished') {
+                return '<button class="flex-1 bg-gray-300 text-gray-500 py-2 rounded-lg" disabled>Finished</button>';
+            }
+            if (match.currentPlayers >= match.maxPlayers) {
+                return '<button class="flex-1 bg-red-300 text-red-700 py-2 rounded-lg" disabled>Full</button>';
+            }
+            return `<button onclick="joinMatch('${match.id}')" class="flex-1 bg-indigo-600 text-white py-2 rounded-lg">Join</button>`;
+        }
+
+        function filterMatches(status) {
+            currentFilter = status;
+            applyFilters();
+            updateFilterButtons();
+        }
+
+        function filterByGame(game) {
+            currentGameFilter = game;
+            applyFilters();
+            updateGameButtons();
+        }
+
+        function applyFilters() {
+            filteredMatches = allMatches.filter(match => {
+                const statusMatch = currentFilter === 'all' || match.status === currentFilter;
+                const gameMatch = currentGameFilter === 'all' || match.game === currentGameFilter;
+                return statusMatch && gameMatch;
+            });
+            renderMatches();
+        }
+
+        function updateFilterButtons() {
+            document.querySelectorAll('.filter-tab').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            event.target.classList.add('bg-indigo-600', 'text-white');
+            event.target.classList.remove('bg-gray-200', 'text-gray-700');
+        }
+
+        function updateGameButtons() {
+            document.querySelectorAll('.game-filter').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            event.target.classList.add('bg-indigo-600', 'text-white');
+            event.target.classList.remove('bg-gray-200', 'text-gray-700');
+        }
+
+        function viewMatch(matchId) {
+            window.location.href = `match.html?id=${matchId}`;
+        }
+
+        function joinMatch(matchId) {
+            const match = allMatches.find(m => m.id === matchId);
+            if (confirm(`Join ${match.title} for ${Utils.formatCurrency(match.entryFee)}?`)) {
+                Utils.showToast('Successfully joined the tournament!', 'success');
+                setTimeout(() => {
+                    window.location.href = `match.html?id=${matchId}`;
+                }, 1000);
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                await firebase.signOut();
+                Utils.showToast('Logged out successfully', 'success');
+                window.location.href = 'index.html';
+            } catch (error) {
+                Utils.showToast('Error logging out', 'error');
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
